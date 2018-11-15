@@ -1,0 +1,695 @@
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2016, Mike Lischke
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+codeFileExtension() ::= ".c"
+headerFileExtension() ::= ".h"
+
+/* XXX_MACRO */
+/* MySql => MY_SQL_ */
+/* MySQL => MY_SQL_ */
+/* Mysql => MYSQL_  */
+NS_MACRO() ::= <<
+<if(file.genPackage)><file.genPackage; format="underscore_upper">_<endif>
+>>
+/* XXX_Type */
+/* MySql => MySql */
+/* MySQL => MySQL */
+/* Mysql => Mysql */
+NS_Type() ::= <<
+<if(file.genPackage)><file.genPackage; format="toPascal"><endif>
+>>
+/* XXX_name */
+/* MySql => my_sql_ */
+/* MySQL => my_sql_ */
+/* Mysql => mysql_  */
+NS_name() ::= <<
+<if(file.genPackage)><file.genPackage; format="underscore_lower">_<endif>
+>>
+
+
+/* <if (file.genPackage)>LEXER<else><(EXTRACT_LEXERNAME()); format="upper">_LEXER<endif> */
+LEXER_MACRO() ::= <<
+<lexer.name; format="underscore_upper">
+>>
+
+/* <if (file.genPackage)>Lexer<else><(EXTRACT_LEXERNAME()) >Lexer<endif> */
+LEXER_Type() ::= <<
+<lexer.name; format="cap">
+>>
+
+/* <if (file.genPackage)>lexer<else><(EXTRACT_LEXERNAME()); format="lower">_lexer<endif> */
+LEXER_name() ::= <<
+<lexer.name; format="underscore_lower">
+>>
+
+
+
+CHANNEL_MACRO(k) ::= <<
+<NS_MACRO()><LEXER_MACRO()>_CHANNEL_<k; format="channelsUpper">
+>>
+CHANNEL_Type(k) ::= <<
+<NS_Type()><LEXER_Type()>Channel<k; format="channelsCap">
+>>
+CHANNEL_name(k) ::= <<
+<NS_name()><LEXER_name()>_channel_<k; format="channelsLower">
+>>
+
+
+
+RULE_MACRO(k) ::= <<
+<NS_MACRO()><LEXER_MACRO()>_RULE_<k; format="upper">
+>>
+RULE_Type(k) ::= <<
+<! not used !>
+<NS_Type()><LEXER_Type()>Rule<k>
+>>
+RULE_name(k) ::= <<
+<! not used !>
+<NS_name()><LEXER_name()>_rule_<k; format="lower">
+>>
+
+PASCAL_TO_SNACK(v) ::= "<v; format=\"toSnack\">"
+PARSER_RULE_ENUM(k) ::= <<
+<NS_MACRO()><PARSER_MACRO()><!_RULE!>_<(PASCAL_TO_SNACK(k)); format="upper">
+>>
+PARSER_TOKEN_ENUM(k) ::= <<
+<NS_MACRO()><PARSER_MACRO()><!_TOKEN!>_<(PASCAL_TO_SNACK(k)); format="upper">
+>>
+
+
+
+SYMBOL_MACRO(k) ::= <<
+<NS_MACRO()><LEXER_MACRO()>_SYMBOL_<k; format="upper">
+>>
+
+
+
+ANTLR_TYPE_LEXER(parentType) ::= <<
+<(parentType); format="type">
+>>
+
+ANTLR_TYPE_PARSER(parentType) ::= <<
+<(parentType); format="type">
+>>
+
+
+
+/*<if (file.genPackage)>PARSER<else><(EXTRACT_GRAMMAR_NAME_FROM_PARSER()); format="upper">_PARSER<endif>*/
+PARSER_MACRO() ::= <<
+<parser.name; format="underscore_upper">
+>>
+/*<if (file.genPackage)>Parser<else><(EXTRACT_GRAMMAR_NAME_FROM_PARSER()); format="toPascal" >Parser<endif>*/
+PARSER_Type() ::= <<
+<parser.name; format="cap">
+>>
+/*<if (file.genPackage)>parser<else><(EXTRACT_GRAMMAR_NAME_FROM_PARSER()); format="lower">_parser<endif>*/
+PARSER_name() ::= <<
+<parser.name; format="underscore_lower">
+>>
+
+
+
+TRIM_CONTEXT(v) ::= <<
+<v; format="trimContext">
+>>
+EXTRACT_CONTEXT_NAME(v) ::= <<
+<(TRIM_CONTEXT(v)); format="toSnack">
+>>
+CONTEXT_MACRO(v) ::= <<
+CONTEXT_<(EXTRACT_CONTEXT_NAME(v)); format="upper">
+>>
+CONTEXT_Type(v) ::= <<
+Context<(EXTRACT_CONTEXT_NAME(v)); format="toPascal">
+>>
+CONTEXT_name(v) ::= <<
+context_<(EXTRACT_CONTEXT_NAME(v)); format="lower">
+>>
+
+
+
+/*------------------------*/
+LISTENER_MACRO() ::= <<
+<file.grammarName; format="underscore_upper">_LISTENER
+>>
+LISTENER_Type() ::= <<
+<file.grammarName; format="cap">Listener
+>>
+LISTENER_name() ::= <<
+<file.grammarName; format="underscore_lower">_listener
+>>
+
+BASE_LISTENER_MACRO() ::= <<
+<file.grammarName; format="underscore_upper">_BASE_LISTENER
+>>
+BASE_LISTENER_Type() ::= <<
+<file.grammarName; format="cap">BaseListener
+>>
+BASE_LISTENER_name() ::= <<
+<file.grammarName; format="underscore_lower">_base_listener
+>>
+
+
+fileHeader(grammarFileName, ANTLRVersion, header) ::= <<
+<header>
+
+// Generated from <grammarFileName> by ANTLR <ANTLRVersion>
+>>
+
+LexerFileHeader(file, lexer, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, namedActions.header)>
+
+<lexer>
+
+>>
+
+LexerFile(file, lexer, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, namedActions.header)>
+
+<namedActions.preinclude>
+
+
+<namedActions.postinclude>
+
+<lexer>
+
+>>
+
+ParserFileHeader(file, parser, namedActions, contextSuperClass) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, namedActions.header)>
+
+<namedActions.preinclude>
+
+//#include "antlr4-runtime.h"
+
+<namedActions.postinclude>
+
+<parser>
+
+>>
+
+ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, namedActions.header)>
+
+<namedActions.preinclude>
+
+//<if (file.genListener)>#include "<file.grammarName>Listener.h"<endif>
+//<if (file.genVisitor)>#include "<file.grammarName>Visitor.h"<endif>
+
+//#include "<file.parser.name>.h"
+
+<namedActions.postinclude>
+
+<parser>
+
+>>
+
+BaseListenerFileHeader(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+
+<namedActions.baselistenerpreinclude>
+
+//#include "antlr4-runtime.h"
+#include "<file.grammarName>Listener.h"
+
+<namedActions.baselistenerpostinclude>
+
+#ifndef __<CLASS_BASE_LISTENER()>_H__
+#define __<CLASS_BASE_LISTENER()>_H__
+
+#include <"<glib-object.h>" >
+
+
+G_BEGIN_DECLS
+
+#define <TYPE_BASE_LISTENER()>            (<class_base_listener()>_get_type())
+#define <CLASS_BASE_LISTENER()>(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), <TYPE_BASE_LISTENER()>, <ClassBaseListener()>))
+#define <CLASS_BASE_LISTENER()>_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), <TYPE_BASE_LISTENER()>, <ClassBaseListener()>Class))
+#define <IS_BASE_LISTENER()>(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), <TYPE_BASE_LISTENER()>))
+#define <IS_BASE_LISTENER()>_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), <TYPE_BASE_LISTENER()>))
+#define <CLASS_BASE_LISTENER()>_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), <TYPE_BASE_LISTENER()>, <ClassBaseListener()>Class))
+
+typedef struct _<ClassBaseListener()> <ClassBaseListener()>;
+typedef struct _<ClassBaseListener()>Class <ClassBaseListener()>Class;
+
+/**
+ * <ClassBaseListener()>:
+ *
+ * This class provides an empty implementation of <file.grammarName>Listener,
+ * which can be extended to create a listener which only needs to handle a subset
+ * of the available methods.
+ */
+struct _<ClassBaseListener()> {
+        /*\< private >*/
+        GObject parent_instance;
+};
+
+struct _<ClassBaseListener()>Class {
+        /*\< private >*/
+        GObjectClass parent_class;
+};
+
+GType <class_base_listener()>_get_type(void)G_GNUC_CONST;
+<ClassBaseListener()> *<class_base_listener()>_new();
+
+G_END_DECLS
+
+#endif /* __<CLASS_BASE_LISTENER()>_H__ */
+
+
+
+
+
+
+
+/*
+class <file.grammarName>BaseListener : public <file.grammarName>Listener {
+public:
+<namedActions.baselistenerdeclarations>
+
+<if (namedActions.baselistenermembers)>
+private:
+<namedActions.baselistenermembers>
+<endif>
+};
+*/
+
+>>
+
+Quote() ::= <<
+"
+>>
+
+BaseListenerFile(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+<namedActions.baselistenerpreinclude>
+
+
+#include <"<glib-object.h>" >
+
+#include "antlr-runtime/types.h"
+
+#include "antlr-runtime/misc/object.h"
+#include "antlr-runtime/misc/int-iset.h"
+#include "antlr-runtime/misc/interval.h"
+
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/terminal-node-impl.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/error-node-impl.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+#include "antlr-runtime/rule-node.h"
+#include "antlr-runtime/rule-context.h"
+#include "antlr-runtime/parser-rule-context.h"
+#include "antlr-runtime/vocabulary.h"
+#include "antlr-runtime/vocabulary-impl.h"
+#include "antlr-runtime/recognizer.h"
+#include "antlr-runtime/parser.h"
+
+
+#include "<file.parserName>.h"
+
+#include "<file.grammarName>Listener.h"
+
+#include "<file.grammarName>BaseListener.h"
+
+<namedActions.baselistenerpostinclude>
+
+/* virtual AntlrParserTreeLsitener */
+static void <class_base_listener()>_interface_parse_tree_listener_visit_terminal (AntlrParseTreeListener *self, AntlrTerminalNode *node) {
+
+}
+static void <class_base_listener()>_interface_parse_tree_listener_visit_error_node (AntlrParseTreeListener *self, AntlrErrorNode *node) {
+
+}
+static void <class_base_listener()>_interface_parse_tree_listener_enter_every_rule (AntlrParseTreeListener *self, AntlrParserRuleContext *ctx) {
+
+}
+static void <class_base_listener()>_interface_parse_tree_listener_exit_every_rule (AntlrParseTreeListener *self, AntlrParserRuleContext *ctx) {
+
+}
+
+static void <class_base_listener()>_interface_parse_tree_listener_init(AntlrParseTreeListenerInterface *iface)
+{
+    iface->visit_terminal   = <class_base_listener()>_interface_parse_tree_listener_visit_terminal;
+    iface->visit_error_node = <class_base_listener()>_interface_parse_tree_listener_visit_error_node;
+    iface->enter_every_rule = <class_base_listener()>_interface_parse_tree_listener_enter_every_rule;
+    iface->exit_every_rule  = <class_base_listener()>_interface_parse_tree_listener_exit_every_rule;
+}
+
+#define ENABLE_TRACE 1
+
+<file.listenerNames: {lname |
+static void <class_base_listener()>_interface_<LISTENER_name()>_enter_<lname; format="toSnack">(<ClassListener()> *self, <ClassContext(lname)> *ctx) {
+#if ENABLE_TRACE
+    gchar *str_text = antlr_parse_tree_get_text(ANTLR_PARSE_TREE(ctx));
+    g_print(<Quote()>enter_<lname; format="toSnack"> => %s\n<Quote()>, str_text);
+    g_free(str_text);
+#endif
+\}
+static void <class_base_listener()>_interface_<LISTENER_name()>_exit_<lname; format="toSnack">(<ClassListener()> *self, <ClassContext(lname)> *ctx) {
+#if ENABLE_TRACE
+    gchar *str_text = antlr_parse_tree_get_text(ANTLR_PARSE_TREE(ctx));
+    g_print(<Quote()>exit_<lname; format="toSnack"> => %s\n<Quote()>, str_text);
+    g_free(str_text);
+#endif
+\}
+}; separator="\n">
+
+static void <class_base_listener()>_interface_<LISTENER_name()>_init(<ClassListener()>Interface *iface)
+{
+<file.listenerNames: {lname |
+    iface->enter_<lname; format="toSnack"> = <class_base_listener()>_interface_<LISTENER_name()>_enter_<lname; format="toSnack">;
+    iface->exit_<lname; format="toSnack"> = <class_base_listener()>_interface_<LISTENER_name()>_exit_<lname; format="toSnack">;
+}; separator="\n">
+
+}
+
+static void <class_base_listener()>_class_init(<ClassBaseListener()>Class *klass);
+static void <class_base_listener()>_init(<ClassBaseListener()> *gobject);
+
+G_DEFINE_TYPE_WITH_CODE (<ClassBaseListener()>, <class_base_listener()>, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (ANTLR_TYPE_PARSE_TREE_LISTENER,
+                                                <class_base_listener()>_interface_parse_tree_listener_init)
+                         G_IMPLEMENT_INTERFACE (<TYPE_LISTENER()>,
+                                                <class_base_listener()>_interface_<LISTENER_name()>_init))
+
+static void
+<class_base_listener()>_class_init(<ClassBaseListener()>Class *klass)
+{
+}
+
+static void
+<class_base_listener()>_init (<ClassBaseListener()> *object)
+{
+}
+
+<ClassBaseListener()> *
+<class_base_listener()>_new (void)
+{
+    return g_object_new (<class_base_listener()>_get_type (), NULL);
+}
+
+<namedActions.baselistenerdefinitions>
+>>
+
+ListenerFileHeader(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+
+<namedActions.listenerpreinclude>
+
+//#include "antlr4-runtime.h"
+//#include "<file.parserName>.h"
+
+<namedActions.listenerpostinclude>
+
+#ifndef __<CLASS_LISTENER()>_H__
+#define __<CLASS_LISTENER()>_H__
+
+#include <"<glib-object.h>" >
+
+G_BEGIN_DECLS
+
+#define <TYPE_LISTENER()>                (<class_listener()>_get_type ())
+#define <CLASS_LISTENER()>(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj),  <TYPE_LISTENER()>,  <ClassListener()>))
+#define <IS_LISTENER()>(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj),  <TYPE_LISTENER()>))
+#define <CLASS_LISTENER()>_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst),  <TYPE_LISTENER()>,  <ClassListener()>Interface))
+
+
+typedef struct _<ClassListener()>          <ClassListener()>;/* dummy object */
+typedef struct _<ClassListener()>Interface <ClassListener()>Interface;
+
+/**
+ * <ClassListener()>Interface:
+<file.listenerNames: {lname |
+ * @enter_<lname; format = "toSnack">: <lname; format = "toPascal"> enter event
+ * @exit_<lname; format = "toSnack">: <lname; format = "toPascal"> exit event
+}> *
+ *
+ * This interface defines an abstract listener for a parse tree produced by <file.parserName>.
+ */
+struct _<ClassListener()>Interface
+{
+    /*\< private >*/
+    GTypeInterface parent_iface;
+
+    /*\< public >*/
+<file.listenerNames: {lname |
+    void (*enter_<lname; format = "toSnack">)  (<ClassListener()> *self, <ClassContext(lname)> *ctx);
+    void (*exit_<lname; format = "toSnack">)   (<ClassListener()> *self, <ClassContext(lname)> *ctx);
+}; separator = "\n">
+<! TODO not complet !>
+};
+
+GType <class_listener()>_get_type (void) G_GNUC_CONST;
+
+<file.listenerNames: {lname |
+void <class_listener()>_enter_<lname; format = "toSnack">  (<ClassListener()> *self, <ClassContext(lname)> *ctx);
+void <class_listener()>_exit_<lname; format = "toSnack">   (<ClassListener()> *self, <ClassContext(lname)> *ctx);
+}; separator = "\n">
+
+
+G_END_DECLS
+
+#endif /* __<CLASS_LISTENER()>_H__ */
+
+>>
+
+ListenerFile(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+<namedActions.listenerpreinclude>
+
+
+#include <"<glib-object.h>" >
+
+#include "antlr-runtime/types.h"
+
+#include "antlr-runtime/misc/object.h"
+#include "antlr-runtime/misc/int-iset.h"
+#include "antlr-runtime/misc/interval.h"
+
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/terminal-node-impl.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/error-node-impl.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+#include "antlr-runtime/rule-node.h"
+#include "antlr-runtime/rule-context.h"
+#include "antlr-runtime/parser-rule-context.h"
+#include "antlr-runtime/vocabulary.h"
+#include "antlr-runtime/vocabulary-impl.h"
+#include "antlr-runtime/recognizer.h"
+#include "antlr-runtime/parser.h"
+
+
+#include "<file.parserName>.h"
+#include "<file.grammarName>Listener.h"
+
+<namedActions.listenerpostinclude>
+
+
+G_DEFINE_INTERFACE(<ClassListener()>, <class_listener()>, ANTLR_TYPE_PARSE_TREE_LISTENER)
+
+
+static void
+<class_listener()>_default_init(<ClassListener()>Interface *iface) {
+    /* Add properties and signals to the interface here */
+}
+
+<file.listenerNames: {lname |
+/**
+ * <class_listener()>_enter_<lname; format = "toSnack">:
+ * @self: Some #<ClassListener()>
+ * @ctx: the parse tree instance
+ *
+ * Enter a parse tree produced by #<ClassContext(lname)>.
+ */
+void <class_listener()>_enter_<lname; format = "toSnack">  (<ClassListener()> *self, <ClassContext(lname)> *ctx) {
+    g_assert(<IS_LISTENER()>(self));
+    <CLASS_LISTENER()>_GET_INTERFACE(self)->enter_<lname; format = "toSnack">(self, ctx);
+\}
+/**
+ * <class_listener()>_exit_<lname; format = "toSnack">:
+ * @self: Some #<ClassListener()>
+ * @ctx: the parse tree instance
+ *
+ * Exit a parse tree produced by #<ClassContext(lname)>.
+ */
+void <class_listener()>_exit_<lname; format = "toSnack">   (<ClassListener()> *self, <ClassContext(lname)> *ctx) {
+    g_assert(<IS_LISTENER()>(self));
+    <CLASS_LISTENER()>_GET_INTERFACE(self)->exit_<lname; format = "toSnack">(self, ctx);
+\}
+}; separator = "\n">
+
+
+
+
+
+<namedActions.listenerdefinitions>
+>>
+
+BaseVisitorFileHeader(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+#pragma once
+
+<namedActions.basevisitorpreinclude>
+
+#include "antlr4-runtime.h"
+#include "<file.grammarName>Visitor.h"
+
+<namedActions.basevisitorpostinclude>
+
+<if(file.genPackage)>
+namespace <file.genPackage> {
+<endif>
+
+/**
+ * This class provides an empty implementation of <file.grammarName>Visitor, which can be
+ * extended to create a visitor which only needs to handle a subset of the available methods.
+ */
+class <file.grammarName>BaseVisitor : public <file.grammarName>Visitor {
+public:
+<namedActions.basevisitordeclarations>
+
+<file.visitorNames: { lname |
+  virtual antlrcpp::Any visit<lname; format = "cap">(<file.parserName>::<lname; format = "cap">Context *ctx) override {
+    return visitChildren(ctx);
+  \}
+}; separator="\n">
+
+<if (namedActions.basevisitormembers)>
+private:
+<namedActions.basevisitormembers>
+<endif>
+};
+
+<if(file.genPackage)>
+}  // namespace <file.genPackage>
+<endif>
+>>
+
+BaseVisitorFile(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+<namedActions.basevisitorpreinclude>
+
+#include "<file.grammarName>BaseVisitor.h"
+
+<namedActions.basevisitorpostinclude>
+
+<if(file.genPackage)>
+using namespace <file.genPackage>;
+<endif>
+
+<namedActions.basevisitordefinitions>
+
+>>
+
+VisitorFileHeader(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+#pragma once
+
+<namedActions.visitorpreinclude>
+
+#include "antlr4-runtime.h"
+#include "<file.parserName>.h"
+
+<namedActions.visitorpostinclude>
+
+<if(file.genPackage)>namespace <file.genPackage> {<endif>
+
+/**
+ * This class defines an abstract visitor for a parse tree
+ * produced by <file.parserName>.
+ */
+class <file.grammarName>Visitor : public antlr4::tree::AbstractParseTreeVisitor {
+public:
+  <namedActions.visitordeclarations>
+
+  /**
+   * Visit parse trees produced by <file.parserName>.
+   */
+  <file.visitorNames: {lname |
+  virtual antlrcpp::Any visit<lname; format = "cap">(<file.parserName>::<lname; format = "cap">Context *context) = 0;
+  }; separator="\n">
+
+<if (namedActions.visitormembers)>
+private:
+<namedActions.visitormembers>
+<endif>
+};
+
+<if(file.genPackage)>
+}  // namespace <file.genPackage>
+<endif>
+>>
+
+VisitorFile(file, header, namedActions) ::= <<
+<fileHeader(file.grammarFileName, file.ANTLRVersion, header)>
+
+<namedActions.visitorpreinclude>
+
+#include "<file.grammarName>Visitor.h"
+
+<namedActions.visitorpostinclude>
+
+<if(file.genPackage)>
+using namespace <file.genPackage>;
+<endif>
+
+<namedActions.visitordefinitions>
+
+>>

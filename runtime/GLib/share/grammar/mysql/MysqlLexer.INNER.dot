@@ -1,0 +1,18 @@
+digraph ATN {
+rankdir=LR;
+s98{fontsize:11, label:"98", shape:"doublecircle", fixedsize:true, width:.6};
+s97{fontsize:11,label:"97", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s342{fontsize:11,label:"342", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s343{fontsize:11,label:"343", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s344{fontsize:11,label:"344", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s345{fontsize:11,label:"345", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s346{fontsize:11,label:"346", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s347{fontsize:11,label:"347", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s97 -> s342 [fontname="Times-Italic", label="&epsilon;"];
+s342 -> s343 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'i'", arrowhead = normal];
+s343 -> s344 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'n'", arrowhead = normal];
+s344 -> s345 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'n'", arrowhead = normal];
+s345 -> s346 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'e'", arrowhead = normal];
+s346 -> s347 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'r'", arrowhead = normal];
+s347 -> s98 [fontname="Times-Italic", label="&epsilon;"];
+}

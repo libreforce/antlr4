@@ -1,0 +1,28 @@
+var dot = {
+  states: {
+    "s27": {fontsize:11, label:"27", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s165: {fontsize:11,label:"165", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s166: {fontsize:11,label:"166", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s167: {fontsize:11,label:"167", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s168: {fontsize:11,label:"168", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s169: {fontsize:11,label:"&rarr;\n169*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s26: {fontsize:11,label:"26", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s170: {fontsize:11,label:"&larr;\n170", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s171: {fontsize:11,label:"{171*\nd=12|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s172: {fontsize:11,label:"172", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s173: {fontsize:11,label:"173*", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s26, target: "s165", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s165, target: "s171", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<simple_expression>", arrowhead:"normal"},
+    {src: s171, target: "s169", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s171, target: "s172", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s169, target: "s166", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s172, target: "s27", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s166, target: "s167", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<expr_op>", arrowhead:"normal"},
+    {src: s167, target: "s168", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<simple_expression>", arrowhead:"normal"},
+    {src: s168, target: "s170", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s170, target: "s173", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s173, target: "s171", fontname:"Times-Italic", label:"&#949;psilon", style:"dashed"}
+  }
+};

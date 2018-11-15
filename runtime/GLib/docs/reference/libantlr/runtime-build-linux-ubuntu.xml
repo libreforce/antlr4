@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" []>
+<article id="runtime-build-linux-ubuntu">
+  <title>Compiling ANTLR on Ubuntu</title>
+
+    <figure>
+      <mediaobject>
+        <imageobject> <!--this is for HTML output -->
+          <!--imagedata fileref="http://design.ubuntu.com/wp-content/uploads/logo-ubuntu_su-orange-hex.png" format="PNG" align="center" scalefit="0.4"/-->
+        </imageobject>
+        <imageobject> <!-- this is for PDF output -->
+          <!--imagedata fileref="glue.jpg" format="JPG" align="center"/-->
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+<!--programlisting>
+~/
+╰── local/
+    ├── src/
+    │   ╰── antlr/
+    │       ├── antlr2/
+    │       ├── antlr3/
+    │       ╰── antlr4/
+    │           ├── README.md
+    │           ├── LICENSE.txt
+    │           ├── CHANGES.txt
+    │           ├── contributors.txt
+    │           ├── appveyor.yml
+    │           ├── build
+    │           ├── doc
+    │           ├── runtime
+    │           │   ├── ...
+    │           │   ╰── glib
+    │           │       ╰── * (the ANTLR Runtime based on GLib)
+    │           ├── runtime-testsuite
+    │           ├── antlr4-maven-plugin
+    │           ├── tool
+    │           ├── tool-testsuite
+    │           ╰── pom.xml
+    ├── build/
+    │   ╰── antlr/
+    │       ├── antlr2/
+    │       ├── antlr3/
+    │       ╰── antlr4/
+    │           ├── x86_64-debug
+    │           ├── x86_64-release
+    │           ├── release
+    │           ╰── debug
+    ├── include/
+    │   ╰── antlr
+    │       ╰── antlr-runtime.h
+    ├── lib/
+    │   ├── pkconfig
+    │   │   ╰── antlr-runtime.pc
+    │   ├── antlr-runtime.a
+    │   ╰── antlr-runtime.so
+    ╰── bin/
+        ╰── antlr-demo
+</programlisting-->
+
+
+<procedure>
+        <step>
+                <title>Installing dependencies</title>
+                <para>
+                        <programlisting language="bash">sudo apt-get update</programlisting>
+                        <programlisting language="bash">sudo apt-get install build-essential libglib2.0-dev gettext</programlisting><!-- libgc-dev  -->
+                        If you want to enable --antlr-module=xml to export AST, you need to install libxml :
+                        <programlisting language="bash">sudo apt-get install libxml2-dev</programlisting>
+                        If you want to be able generate package, you need to install autotools :
+                        <programlisting language="bash">sudo apt-get install autoconf automake intltool libtool</programlisting>
+                        If you want to be able to generate documentation you need to install gtk-doc :
+                        <programlisting language="bash">sudo apt-get install gtk-doc-tools</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Getting source from Github</title>
+                <para>
+                        Structure drectory:
+                        <programlisting language="bash">cd /home/antlr/local</programlisting>
+                        <programlisting language="bash">mkdir -p ./src/antlr</programlisting>
+                        <programlisting language="bash">cd ./src/antlr</programlisting>
+                        <programlisting language="bash">git clone https://github.com/antlr/antlr4.git</programlisting>
+                        <programlisting>Cloning into 'antlr4'...
+remote: Counting objects: 61480, done.
+remote: Total 61480 (delta 0), reused 0 (delta 0), pack-reused 61480
+Receiving objects: 100% (61480/61480), 31.24 MiB | 7.18 MiB/s, done.
+Resolving deltas: 100% (32970/32970), done.
+Checking connectivity... done.
+Checking out files: 100% (1427/1427), done.</programlisting>
+                        <programlisting language="bash">ls ./antlr4</programlisting>
+                        <programlisting>antlr4-maven-plugin  contributors.txt  README.md          tool-testsuite
+appveyor.yml         doc               runtime
+build                LICENSE.txt       runtime-testsuite
+CHANGES.txt          pom.xml           tool</programlisting>
+                        <programlisting language="bash">cd ./antlr4</programlisting>
+                        <programlisting language="bash">git tags -l</programlisting>
+                        <programlisting>4.0
+...
+antlr4-master-4.5.3</programlisting>
+                        <programlisting language="bash">git checkout tags/4.0 -b antlr-4.0</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Configuring and Compiling</title>
+                <para>
+                        <programlisting language="bash">cd ./runtime/GLib</programlisting>
+                        Only from git source code :
+                        <!--programlisting language="bash">export NOCONFIGURE=1</programlisting-->
+                        <programlisting language="bash">NOCONFIGURE=1 &amp;&amp; ./autogen.sh</programlisting>
+                        Structure drectory:
+                        <programlisting language="bash">cd /home/antlr/local</programlisting>
+                        <programlisting language="bash">mkdir -p ./build/antlr4-glib/release</programlisting>
+                        Configure :
+                        <programlisting language="bash">cd ./build/antlr4-glib/release</programlisting>
+                        <programlisting language="bash">../../../src/antlr/antlr4/runtime/GLib/configure</programlisting>
+                        <programlisting>...
+        GAntlr-runtime 4.5.3
+        ====================
+
+        Modules:              [static|shared]
+          * Lipsy             no
+          * Railroad          no
+          * LaTeX             no
+          * Svg               no
+        Debugging:            no
+        Documentation:        no
+</programlisting>
+                        Make :
+                        <programlisting language="bash">make</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Installing</title>
+                <para>
+                        <programlisting language="bash">make install</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Uninstalling</title>
+                <para>
+                        <programlisting language="bash">make uninstall</programlisting>
+                </para>
+        </step>
+
+
+</procedure>
+
+</article>

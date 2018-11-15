@@ -1,0 +1,32 @@
+var dot = {
+  states: {
+    "s17": {fontsize:11, label:"17", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s132: {fontsize:11,label:"132", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s133: {fontsize:11,label:"133", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s134: {fontsize:11,label:"134", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s135: {fontsize:11,label:"135", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s136: {fontsize:11,label:"&rarr;\n136*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s137: {fontsize:11,label:"&larr;\n137", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s138: {fontsize:11,label:"{138*\nd=9|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s139: {fontsize:11,label:"139", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s140: {fontsize:11,label:"140*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s141: {fontsize:11,label:"141", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s142: {fontsize:11,label:"142", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s16: {fontsize:11,label:"16", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s16, target: "s132", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s132, target: "s133", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'('", arrowhead:"normal"},
+    {src: s133, target: "s138", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<column_name>", arrowhead:"normal"},
+    {src: s138, target: "s136", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s138, target: "s139", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s136, target: "s134", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s139, target: "s141", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s134, target: "s135", fontsize:11, fontname:"Courier", arrowsize:.7, label: "','", arrowhead:"normal"},
+    {src: s141, target: "s142", fontsize:11, fontname:"Courier", arrowsize:.7, label: "')'", arrowhead:"normal"},
+    {src: s135, target: "s137", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<column_name>", arrowhead:"normal"},
+    {src: s142, target: "s17", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s137, target: "s140", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s140, target: "s138", fontname:"Times-Italic", label:"&#949;psilon", style:"dashed"}
+  }
+};

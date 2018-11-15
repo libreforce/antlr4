@@ -1,0 +1,33 @@
+var dot = {
+  states: {
+    "s55": {fontsize:11, label:"55", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s256: {fontsize:11,label:"256", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s257: {fontsize:11,label:"257", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s258: {fontsize:11,label:"{&rarr;\n258\nd=25|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s259: {fontsize:11,label:"&larr;\n259", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s54: {fontsize:11,label:"54", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s249: {fontsize:11,label:"249", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s250: {fontsize:11,label:"250", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s251: {fontsize:11,label:"251", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s252: {fontsize:11,label:"{&rarr;\n252\nd=24|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s253: {fontsize:11,label:"&larr;\n253", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s254: {fontsize:11,label:"254", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s255: {fontsize:11,label:"255", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s54, target: "s249", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s249, target: "s258", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_factor4>", arrowhead:"normal"},
+    {src: s258, target: "s250", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s258, target: "s259", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s250, target: "s252", fontsize:11, fontname:"Courier", arrowsize:.7, label: "{'left', 'right'}", arrowhead:"normal"},
+    {src: s259, target: "s55", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s252, target: "s251", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s252, target: "s253", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s251, target: "s253", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'outer'", arrowhead:"normal"},
+    {src: s253, target: "s254", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s254, target: "s255", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'join'", arrowhead:"normal"},
+    {src: s255, target: "s256", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_factor4>", arrowhead:"normal"},
+    {src: s256, target: "s257", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<join_condition>", arrowhead:"normal"},
+    {src: s257, target: "s259", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

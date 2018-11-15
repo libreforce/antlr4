@@ -1,0 +1,29 @@
+var dot = {
+  states: {
+    "s53": {fontsize:11, label:"53", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s240: {fontsize:11,label:"240", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s241: {fontsize:11,label:"241", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s242: {fontsize:11,label:"242", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s243: {fontsize:11,label:"243", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s52: {fontsize:11,label:"52", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s244: {fontsize:11,label:"244", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s245: {fontsize:11,label:"{&rarr;\n245\nd=22|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s246: {fontsize:11,label:"&larr;\n246", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s247: {fontsize:11,label:"{&rarr;\n247\nd=23|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s248: {fontsize:11,label:"&larr;\n248", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s52, target: "s240", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s240, target: "s247", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_factor3>", arrowhead:"normal"},
+    {src: s247, target: "s241", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s247, target: "s248", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s241, target: "s242", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'straight_join'", arrowhead:"normal"},
+    {src: s248, target: "s53", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s242, target: "s245", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_atom>", arrowhead:"normal"},
+    {src: s245, target: "s243", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s245, target: "s246", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s243, target: "s244", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'on'", arrowhead:"normal"},
+    {src: s246, target: "s248", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s244, target: "s246", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<expression>", arrowhead:"normal"}
+  }
+};

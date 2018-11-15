@@ -1,0 +1,18 @@
+digraph ATN {
+rankdir=LR;
+s114{fontsize:11, label:"114", shape:"doublecircle", fixedsize:true, width:.6};
+s113{fontsize:11,label:"113", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s387{fontsize:11,label:"387", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s388{fontsize:11,label:"388", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s389{fontsize:11,label:"389", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s390{fontsize:11,label:"390", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s391{fontsize:11,label:"391", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s392{fontsize:11,label:"392", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s113 -> s387 [fontname="Times-Italic", label="&epsilon;"];
+s387 -> s388 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'g'", arrowhead = normal];
+s388 -> s389 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'r'", arrowhead = normal];
+s389 -> s390 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'o'", arrowhead = normal];
+s390 -> s391 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'u'", arrowhead = normal];
+s391 -> s392 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'p'", arrowhead = normal];
+s392 -> s114 [fontname="Times-Italic", label="&epsilon;"];
+}

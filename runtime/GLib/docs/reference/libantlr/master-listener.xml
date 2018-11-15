@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" []>
+<refentry id="antlr-matser-listener">
+  <refmeta>
+    <refentrytitle>Listener</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>ANTLR Runtime Library</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Parse Tree Listeners</refname>
+    <refpurpose>How to compile ANTLR itself</refpurpose>
+  </refnamediv>
+
+  <refsect1>
+    <title>Parse Tree Listeners</title>
+
+    <para>
+    Partially taken from publically visible
+    <ulink url="http://media.pragprog.com/titles/tpantlr2/picture.pdf">excerpt from ANTLR 4 book</ulink>
+    </para>
+
+    <para>
+    By default, ANTLR-generated parsers build a data structure called a parse
+    tree or syntax tree that records how the parser recognized the structure
+    of the input sentence and component phrases.
+    </para>
+
+    <para>
+    The interior nodes of the parse tree are phrase names that group and
+    identify their children. The root node is the most abstract phrase
+    name, in this case stat (short for statement). The leaves of a parse
+    tree are always the input tokens. Parse trees sit between a language
+    recognizer and an interpreter or translator implementation.
+    They are extremely effective data structures because they contain all
+    of the input and complete knowledge of how the parser grouped the symbols
+    into phrases. Better yet, they are easy to understand and the parser
+    generates them automatically (unless you turn them off with
+    parser.setBuildParseTree(false)).
+    </para>
+
+    <para>
+    Because we specify phrase structure with a set of rules, parse tree subtree
+    roots correspond to grammar rule names. ANTLR has a ParseTreeWalker that
+    knows how to walk these parse trees and trigger events in listener
+    implementation objects that you can create. The ANTLR tool generates
+    listener interfaces for you also, unless you turn that off with a
+    commandline option. You can also have it generate visitors. For example
+    from a Java.g4 grammar, ANTLR generates:
+    </para>
+
+    <informalexample><programlisting language="C"><![CDATA[
+static void
+my_java_listener_enter_class_declaration(AntlrParserTreeListener *self, AntlrParserRuleContext *context)
+{
+    MyJavaContextClassDeclaration *ctx = MY_JAVA_CONTEXT_CLASS_DECLARATION(context);
+    MyJavaListener *listener = MY_JAVA_LISTENER(self);
+
+    // Make your stuff
+    gchar *str_text = antlr_parser_rule_context_get_text(context);
+    g_print("class declaration: %s\n", str_text);
+    g_free(str_text);
+}
+
+static void
+my_java_listener_exit_class_declaration(AntlrParserTreeListener *self, AntlrParserRuleContext *context)
+{
+}
+
+static void
+my_java_listener_enter_class_declaration(AntlrParserTreeListener *self, AntlrParserRuleContext *context)
+{
+}
+...
+
+static void
+my_java_listener_interface_parser_tree_listener_init(AntlrParserTreeListenerInterface *iface)
+{
+    iface->enter_class_declaration = my_java_listener_enter_class_declaration;
+    iface->exit_class_declaration = my_java_listener_exit_class_declaration;
+    iface->enter_method_declaration = my_java_listener_enter_method_declaration;
+    ...
+
+}
+
+G_DEFINE_TYPE_WITH_CODE (MyJavaListener, my_java_listener, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (ANTLR_TYPE_PARSE_TREE_LISTENER,
+                                                my_java_listener_interface_parser_tree_listener_init))
+
+    ]]></programlisting></informalexample>
+
+    <para>
+    where there is an enter and exit method for each rule in the parser
+    grammar. ANTLR also generates a base listener with the fall empty
+    implementations of all listener interface methods, in this case called
+    JavaBaseListener. You can build your listener by subclassing this base
+    and overriding the methods of interest.
+    </para>
+
+    <para>
+    Assuming you've created a listener object called MyListener, here is how
+    to call the Java parser and walk the parse tree:
+    </para>
+
+
+<informalexample><programlisting language="C"><![CDATA[
+#include <antlr/runtime.h>
+#include "java-antlr.h" // MyJavaLexer, MyJavaParser, MyJavaContextCompilationUnit, MyJavaListener
+int
+main (int argc, char *argv[])
+{
+    GError *error = NULL;
+    AntlrFileStream *file_stream = NULL;
+    AntlrCommonTokenStream *tokens;
+    AntlrParseTreeWalker *walker;
+    MyJavaLexer *lexer;
+    MyJavaParser *parser;
+    MyJavaContextCompilationUnit *context_compilation_unit = NULL;
+    MyJavaListener *listener;
+
+    const gchar *filename = "scripts.java";
+    file_stream = antlr_file_stream_new_from_filename_encoding(filename, NULL, &error);
+    if (!file_stream) {
+        g_print("Error: %s\n", error->message);
+        g_object_unref(error);
+        return 1;// exit
+    }
+
+    // Get our lexer
+    lexer = my_java_lexer_new_with_char_stream(ANTLR_CHAR_STREAM(file_stream));
+
+    // Get a list of matched tokens
+    tokens = antlr_common_token_stream_new_with_token_source(ANTLR_TOKEN_SOURCE(lexer));
+
+    // Pass the tokens to the parser
+    parser = my_java_parser_new_with_token_stream( ANTLR_TOKEN_STREAM(tokens) );
+
+    // Specify our entry point
+    context_compilation_unit = my_java_parser_parse_compilation_unit(parser, &error);// parse a compilationUnit
+    if (!context_compilation_unit) {
+        switch (error->code) {
+            case AntlrParserErrorNoViableAlts:
+            // try to fix error
+            default:
+            g_print("Error: %s\n", error->message);
+            g_object_unref(error);
+            return 1;// exit
+        }
+    }
+
+    // Walk it and attach our listener
+    walker = antlr_parse_tree_walker_new();
+    listener = my_java_listener_new();
+    antlr_parse_tree_walker_walk(walker,
+                                 ANTLR_PARSE_TREE_LISTENER(listener),
+                                 ANTLR_PARSER_RULE_CONTEXT(context_compilation_unit));
+
+
+    // Free memory
+    g_object_unref(lexer);
+    g_object_unref(tokens);
+    g_object_unref(parser);
+    g_object_unref(context_compilation_unit);
+    g_object_unref(walker);
+    g_object_unref(listener);
+
+    return 0;
+}
+]]></programlisting></informalexample>
+
+    <para>
+    Listeners and visitors are great because they keep application-specific
+    code out of grammars, making grammars easier to read and preventing them
+    from getting entangled with a particular application.
+    </para>
+
+    <para>
+    See the book for more information on listeners and to learn how to use
+    visitors. (The biggest difference between the listener and visitor
+    mechanisms is that listener methods are called independently by an
+    ANTLR-provided walker object, whereas visitor methods must walk their
+    children with explicit visit calls. Forgetting to invoke visitor methods
+    on a node’s children, means those subtrees don’t get visited.)
+    </para>
+
+  </refsect1>
+</refentry>

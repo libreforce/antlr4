@@ -1,0 +1,211 @@
+
+matchATN mode 0 start: 0
+closure((1,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((3,2,[$]))
+closure((10,2,[$]))
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing 'a' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'a' at (10,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon a
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'b' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'b' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon b
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'c' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'c' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon c
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing ' ' at (5,1,[$])
+testing ' ' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 2147483647:[] upon
+ACTION null
+DFA after matchATN: s0-'a'->:s1=>1
+:s1=>1-'b'->:s1=>1
+:s1=>1-'c'->:s1=>1
+
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing ' ' at (5,1,[$])
+testing ' ' at (10,2,[$])
+closure((11,2,[$]))
+closure((12,2,[$]))
+closure((13,2,[$]))
+closure((4,2,[$]))
+closure at WS rule stop (4,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 2:[(4,2,[$])]=>2 upon
+execATN loop starting closure: [(4,2,[$])]
+testing 'd' at (4,2,[$])
+EDGE 2:[(4,2,[$])]=>2 -> 2147483647:[] upon d
+ACTION org.antlr.v4.runtime.atn.LexerActionExecutor@8908cf9d
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing 'd' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'd' at (10,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon d
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'e' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'e' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon e
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'f' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'f' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon f
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+reuse state 1 edge to 2147483647
+ACTION null
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+reuse state 0 edge to 2
+execATN loop starting closure: [(4,2,[$])]
+testing 'g' at (4,2,[$])
+EDGE 2:[(4,2,[$])]=>2 -> 2147483647:[] upon g
+ACTION org.antlr.v4.runtime.atn.LexerActionExecutor@8908cf9d
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing 'g' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'g' at (10,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon g
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'h' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'h' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon h
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'i' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'i' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon i
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+reuse state 1 edge to 2147483647
+ACTION null
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+reuse state 0 edge to 2
+execATN loop starting closure: [(4,2,[$])]
+testing 'x' at (4,2,[$])
+EDGE 2:[(4,2,[$])]=>2 -> 2147483647:[] upon x
+ACTION org.antlr.v4.runtime.atn.LexerActionExecutor@8908cf9d
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing 'x' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'x' at (10,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon x
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'y' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'y' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon y
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing 'z' at (5,1,[$])
+closure((7,1,[$]))
+closure((8,1,[$]))
+closure((6,1,[$]))
+closure((5,1,[$]))
+closure((9,1,[$]))
+closure((2,1,[$]))
+closure at ID rule stop (2,1,[$])
+testing 'z' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 1:[(5,1,[$]), (2,1,[$])]=>1 upon z
+execATN loop starting closure: [(5,1,[$]), (2,1,[$])]
+testing '
+' at (5,1,[$])
+testing '
+' at (2,1,[$])
+EDGE 1:[(5,1,[$]), (2,1,[$])]=>1 -> 2147483647:[] upon
+
+ACTION null
+start state closure=[(5,1,[$]), (10,2,[$])]
+execATN loop starting closure: [(5,1,[$]), (10,2,[$])]
+testing '
+' at (5,1,[$])
+testing '
+' at (10,2,[$])
+closure((11,2,[$]))
+closure((12,2,[$]))
+closure((13,2,[$]))
+closure((4,2,[$]))
+closure at WS rule stop (4,2,[$])
+EDGE 0:[(5,1,[$]), (10,2,[$])] -> 2:[(4,2,[$])]=>2 upon
+
+execATN loop starting closure: [(4,2,[$])]
+testing EOF at (4,2,[$])
+ACTION org.antlr.v4.runtime.atn.LexerActionExecutor@8908cf9d
+abcdefghixyz

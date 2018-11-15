@@ -1,0 +1,29 @@
+var dot = {
+  states: {
+    "s5": {fontsize:11, label:"5", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s96: {fontsize:11,label:"{&rarr;\n96\nd=2|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s97: {fontsize:11,label:"&larr;\n97", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s4: {fontsize:11,label:"4", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s89: {fontsize:11,label:"89", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s90: {fontsize:11,label:"90", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s91: {fontsize:11,label:"91", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s92: {fontsize:11,label:"92", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s93: {fontsize:11,label:"{&rarr;\n93\nd=1|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s94: {fontsize:11,label:"&larr;\n94", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s95: {fontsize:11,label:"95", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s4, target: "s89", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s89, target: "s90", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'select'", arrowhead:"normal"},
+    {src: s90, target: "s93", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<column_list_clause>", arrowhead:"normal"},
+    {src: s93, target: "s91", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s93, target: "s94", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s91, target: "s92", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'from'", arrowhead:"normal"},
+    {src: s94, target: "s96", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s92, target: "s94", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_references>", arrowhead:"normal"},
+    {src: s96, target: "s95", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s96, target: "s97", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s95, target: "s97", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<where_clause>", arrowhead:"normal"},
+    {src: s97, target: "s5", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

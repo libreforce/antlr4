@@ -1,0 +1,22 @@
+
+
+#include <glib-object.h>
+
+#include "suite.h"
+
+
+int
+main(int argc, char *argv[])
+{
+
+    g_test_init (&argc, &argv, NULL);
+
+    GTestSuite *suite = g_test_get_root();
+
+    GTestSuite *suite_dfa = test_antlr_dfa_create_suite();
+    g_test_suite_add_suite(suite, suite_dfa);
+
+    g_test_run_suite(suite);
+
+    return 0;
+}

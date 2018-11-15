@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding="ISO-8859-1"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+
+<chapter id="application-running">
+  <title>Running and debugging ANTLR applications</title>
+  <subtitle>How to run and debug your ANTLR application</subtitle>
+
+<sect1>
+  <title>Running ANTLR applications</title>
+
+  <sect2>
+  <title>Common commandline options</title>
+
+    <para>
+      All ANTLR applications support a number of standard commandline
+      options. These are removed from <literal>argv</literal> by antlr_init().
+      <!--Modules may parse and remove further options. The
+      <link linkend="x11-cmdline">X11</link> and
+      <link linkend="win32-cmdline">Windows</link> GDK backends parse
+      some additional commandline options.-->
+    </para>
+
+    <formalpara>
+      <title><systemitem>--g-fatal-warnings</systemitem></title>
+      <para>
+        Make ANTLR abort on all warnings. This is useful to stop on the first
+        warning in a debugger, if your application is printing multiple
+        warnings.  It's almost always best to start debugging with the first
+        warning that occurs.
+      </para>
+    </formalpara>
+
+    <formalpara>
+      <title><systemitem>--antlr-debug <replaceable>options</replaceable></systemitem></title>
+      <para>
+        A list of <link linkend="ANTLR-Debug-Options">debug options</link>
+        to turn on in addition to those specified in the <envar>ANTLR_DEBUG</envar>
+        environment variable.
+        This option is only available if ANTLR has been configured with
+        <option>--enable-debug=yes</option>.
+      </para>
+    </formalpara>
+
+    <formalpara>
+      <title><systemitem>--antlr-no-debug <replaceable>options</replaceable></systemitem></title>
+      <para>
+        A list of <link linkend="ANTLR-Debug-Options">debug options</link>
+        to turn off.
+        This option is only available if ANTLR has been configured with
+        <option>--enable-debug=yes</option>.
+      </para>
+    </formalpara>
+
+  </sect2>
+
+  <sect2>
+    <title>Environment variables</title>
+    <para>
+      ANTLR inspects a number of environment variables in addition to standard
+      variables like <envar>LANG</envar>, <envar>PATH</envar> or <envar>HOME</envar>;
+      mostly to determine paths to look for certain
+      files.<!-- The <link linkend="x11-envar">X11</link>,
+      <link linkend="win32-envar">Windows</link> and
+      <link linkend="fb-envar">Framebuffer</link> GDK backends use some additional environment variables.-->
+    </para>
+
+    <formalpara id="ANTLR-Debug-Options">
+      <title><envar>ANTLR_DEBUG</envar></title>
+      <para>
+        If ANTLR has been configured with <option>--enable-debug=yes</option>,
+        this variable can be set to a list of debug options, which cause ANTLR
+        to print out different types of debugging information.
+        <variablelist>
+
+          <varlistentry>
+            <term>decisions</term>
+            <listitem><para>Cross-process embedding</para></listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>retry</term>
+            <listitem><para>Text widget internals</para></listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>dfa</term>
+            <listitem><para>Tree widget internals</para></listitem>
+          </varlistentry>
+        </variablelist>
+        The special value <literal>all</literal> can be used to turn on all
+        debug options.
+      </para>
+    </formalpara>
+
+    <formalpara id="ANTLR-Module-Options">
+      <title><envar>ANTLR_MODULES</envar></title>
+      <para>
+        A list of modules to load.
+        <variablelist>
+          <varlistentry>
+            <term>lipsy</term>
+            <listitem><para>Export sentence to Lypsi format</para></listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>railroad</term>
+            <listitem><para>Export grammar to Railroad format</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+        The special value <literal>all</literal> can be used to turn on all
+        module options.
+      </para>
+    </formalpara>
+
+  </sect2>
+
+
+</sect1>
+
+    <sect1>
+    <title>Debugging with GDB - Pretty Printing</title>
+        <sect2>
+            <title>Commandline</title>
+            ...
+        </sect2>
+
+        <sect2>
+            <title>IDE QTCreator - Phyton</title>
+            ...
+        </sect2>
+
+    </sect1>
+
+
+</chapter>

@@ -1,0 +1,17 @@
+var dot = {
+  states: {
+    "s81": {fontsize:11, label:"81", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s80: {fontsize:11,label:"80", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s408: {fontsize:11,label:"408", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s409: {fontsize:11,label:"409", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s410: {fontsize:11,label:"410", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s411: {fontsize:11,label:"411", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s80, target: "s408", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s408, target: "s409", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'('", arrowhead:"normal"},
+    {src: s409, target: "s410", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<select_clause>", arrowhead:"normal"},
+    {src: s410, target: "s411", fontsize:11, fontname:"Courier", arrowsize:.7, label: "')'", arrowhead:"normal"},
+    {src: s411, target: "s81", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

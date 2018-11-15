@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding="ISO-8859-1"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+
+<chapter id="application-build">
+    <title>Compiling ANTLR applications</title>
+    <subtitle>How to compile your ANTLR application</subtitle>
+
+    <para>
+        To compile a ANTLR application, you need to tell the compiler where to find the ANTLR header files and libraries. This is done with the pkg-config utility.
+    </para>
+
+    <para>
+        The following interactive shell session demonstrates how pkg-config is used (the actual output on your system may be different):
+    </para>
+
+    <programlisting language="bash">pkg-config --cflags antlr-4.0</programlisting>
+    <programlisting>-I/home/antlr/local/include/antlr-4.0 -I/home/antlr/local/lib/antlr-4.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include</programlisting>
+    <programlisting language="bash">pkg-config --libs antlr-4.0</programlisting>
+    <programlisting>-L/home/antlr/local/lib -L/usr/lib/ -lantlr-4.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0</programlisting>
+
+
+    <para>
+        The simplest way to compile a program is to use the "backticks"
+        feature of the shell. If you enclose a command in backticks
+        (not single quotes), then its output will be substituted into
+        the command line before execution. So to compile a ANTLR Hello,
+        you would type the following:
+    </para>
+
+    <programlisting language="bash">gcc hello.c -o hello `pkg-config --cflags --libs antlr-4.0`</programlisting>
+
+    <para>
+        If you want to make sure that your program doesn't use any deprecated
+        functions, you can define the preprocessor symbol
+        ANTLR_DISABLE_DEPRECATED by using the command line option
+        -DANTLR_DISABLE_DEPRECATED=1. There are similar symbols
+        G_DISABLE_DEPRECATED for GLib.
+    </para>
+
+    <para>
+        If you want to make sure that your program doesn't use any functions
+        which may be problematic in a multihead setting, you can define the
+        preprocessor symbol ANTLR_MULTIHEAD_SAFE by using the command line
+        option -DANTLR_MULTIHEAD_SAFE=1.
+    </para>
+
+</chapter>

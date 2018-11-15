@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s140{fontsize:11, label:"140", shape:"doublecircle", fixedsize:true, width:.6};
+s465{fontsize:11,label:"465", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s466{fontsize:11,label:"&rarr;\n466+", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s467{fontsize:11,label:"&larr;\n467", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s468{fontsize:11,label:"{468+\nd=6|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1};
+s469{fontsize:11,label:"469", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s139{fontsize:11,label:"139", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s139 -> s466 [fontname="Times-Italic", label="&epsilon;"];
+s466 -> s465 [fontname="Times-Italic", label="&epsilon;"];
+s465 -> s467 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'0'..'9'", arrowhead = normal];
+s467 -> s468 [fontname="Times-Italic", label="&epsilon;"];
+s468:p0 -> s466 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s468:p1 -> s469 [fontname="Times-Italic", label="&epsilon;"];
+s469 -> s140 [fontname="Times-Italic", label="&epsilon;"];
+}

@@ -1,0 +1,18 @@
+var dot = {
+  states: {
+    "s49": {fontsize:11, label:"49", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s48: {fontsize:11,label:"48", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s225: {fontsize:11,label:"225", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s226: {fontsize:11,label:"226", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s227: {fontsize:11,label:"{&rarr;\n227\nd=18|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s228: {fontsize:11,label:"&larr;\n228", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s48, target: "s227", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s227, target: "s225", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s227, target: "s226", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s225, target: "s228", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_factor1>", arrowhead:"normal"},
+    {src: s226, target: "s228", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_atom>", arrowhead:"normal"},
+    {src: s228, target: "s49", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

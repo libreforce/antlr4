@@ -1,0 +1,18 @@
+digraph ATN {
+rankdir=LR;
+s132{fontsize:11, label:"132", shape:"doublecircle", fixedsize:true, width:.6};
+s448{fontsize:11,label:"448", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s449{fontsize:11,label:"449", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s450{fontsize:11,label:"450", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s131{fontsize:11,label:"131", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s451{fontsize:11,label:"451", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s452{fontsize:11,label:"452", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s453{fontsize:11,label:"453", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s131 -> s448 [fontname="Times-Italic", label="&epsilon;"];
+s448 -> s449 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'r'", arrowhead = normal];
+s449 -> s450 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'i'", arrowhead = normal];
+s450 -> s451 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'g'", arrowhead = normal];
+s451 -> s452 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'h'", arrowhead = normal];
+s452 -> s453 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'t'", arrowhead = normal];
+s453 -> s132 [fontname="Times-Italic", label="&epsilon;"];
+}

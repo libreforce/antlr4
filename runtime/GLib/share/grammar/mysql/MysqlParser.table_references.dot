@@ -1,0 +1,29 @@
+var dot = {
+  states: {
+    "s47": {fontsize:11, label:"47", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s224: {fontsize:11,label:"224*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s216: {fontsize:11,label:"216", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s217: {fontsize:11,label:"217", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s218: {fontsize:11,label:"218", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s219: {fontsize:11,label:"219", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s220: {fontsize:11,label:"{&rarr;\n220*\nd=16|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s221: {fontsize:11,label:"&larr;\n221", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s46: {fontsize:11,label:"46", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s222: {fontsize:11,label:"{222*\nd=17|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s223: {fontsize:11,label:"223", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s46, target: "s216", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s216, target: "s222", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_reference>", arrowhead:"normal"},
+    {src: s222, target: "s220", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s222, target: "s223", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s220, target: "s217", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s220, target: "s219", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s223, target: "s47", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s217, target: "s218", fontsize:11, fontname:"Courier", arrowsize:.7, label: "','", arrowhead:"normal"},
+    {src: s219, target: "s221", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<join_clause>", arrowhead:"normal"},
+    {src: s218, target: "s221", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<table_reference>", arrowhead:"normal"},
+    {src: s221, target: "s224", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s224, target: "s222", fontname:"Times-Italic", label:"&#949;psilon", style:"dashed"}
+  }
+};

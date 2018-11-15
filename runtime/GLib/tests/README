@@ -1,0 +1,66 @@
+tests
+ |
+ +- unit
+ |  |
+ |  +- mock
+ |  |
+ |  +- lib
+ |     |
+ |     +- antlr-runtime
+ |     |  |
+ |     |  +- misc
+ |     |  |
+ |     |  +- atn
+ |     |  |
+ |     |  +- dfa
+ |     |  |
+ |     |  +- tree
+ |     |
+ |     +- antlr-interpreter
+ |
+ +- fonctionnal
+    +-
+    +- [ ] CompositeLexers
+    +- [ ] CompositeParsers
+    +- [ ] FullContextParsing
+    +- [ ] LeftRecursion
+    +- [ ] LexerErrors
+    +- [X] LexerExec
+    +- [ ] Listeners
+    +- [ ] ParserErrors
+    +- [X] ParserExec
+    +- [ ] ParseTrees
+    +- [ ] Performance
+    +- [ ] SemPredEvalLexer
+    +- [ ] SemPredEvalParser
+    +- [ ] Sets
+    +- [ ] Visitors
+
+
+Ici le runtime-test est installé
+4 pass ...
+~/local/src/tmp/test/antlr4.6/runtime-testsuite$ mvn -e -Dtest=java.TestParserExec test
+
+
+Ici le runtime est installé sans les test (remove debug=true)
+~/local/src/tmp/antlr4.6$ mvn -DskipTests install
+
+
+generate test report :
+
+$> cd antlr/tests
+$> gtester test_libantlr -o=test_libantlr.xml
+$> echo "Add <info> in test_libantlr.xml"
+
+<?xml version="1.0"?>
+<gtester>
+<info>
+<package>PACKAGENAME</package>
+<version>VERSION</version>
+<revision>REVISION</revision>
+</info>
+
+...
+</gtester>
+
+$> gtester-report tests_libantlr.xml > tests_libantlr.html

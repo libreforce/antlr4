@@ -1,0 +1,13 @@
+var dot = {
+  states: {
+    "s79": {fontsize:11, label:"79", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s406: {fontsize:11,label:"406", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s407: {fontsize:11,label:"407", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s78: {fontsize:11,label:"78", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s78, target: "s406", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s406, target: "s407", fontsize:11, fontname:"Courier", arrowsize:.7, label: "ID", arrowhead:"normal"},
+    {src: s407, target: "s79", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

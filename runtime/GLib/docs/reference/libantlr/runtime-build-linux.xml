@@ -1,0 +1,483 @@
+<?xml version="1.0"?>
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+
+<sect1 id="runtime-build-linux" >
+    <title>Compiling ANTLR on UNIX-like systems</title>
+
+    <para>
+      This chapter covers building and installing ANTLR on UNIX and
+      UNIX-like systems such as Linux.<!-- Compiling ANTLR on Microsoft
+      Windows is different in detail and somewhat more difficult to
+      get going since the necessary tools aren't included with
+      the operating system.-->
+    </para>
+    <!--para>
+      Before we get into the details of how to compile ANTLR, we should
+      mention that in many cases, binary packages of ANTLR prebuilt for
+      your operating system will be available, either from your
+      operating system vendor or from independent sources. If such a
+      set of packages is available, installing it will get you
+      programming wih ANTLR much faster than building it yourself. In
+      fact, you may well already have ANTLR installed on your system
+      already.
+    </para-->
+    <para>
+        Is recommended for most users. Pre-compiled binaries of the
+        stable ANTLR are usually available for many platforms
+        (see the platform-specific pages for more details), so you
+        do not even have to compile the code yourself.
+    </para>
+
+
+  <sect2 id="getting_source">
+    <title>Get source code</title>
+
+        <sect3 id="source_packages">
+            <title>From the source package</title>
+            <para>
+                The official distribution of ANTLR is the source code,
+                distributed in tar files from the antlr site.
+                The same source code can be compiled to create binaries
+                for different platforms such as GNU/Linux, Microsoft Windows,
+                Mac OS X, Solaris and many others.
+            </para>
+            <para>
+                A source package is distributed as a
+                <literal>zip</literal>, <literal>tar.gz</literal> or <literal>tar.bz2</literal> file
+                which you unpack into a directory full of the source files as follows:
+            </para>
+            <programlisting language="bash">tar xvfz ANTLR-4.5.3.tar.gz</programlisting>
+            <programlisting language="bash" linenumbering="unnumbered">tar xvfj ANTLR-4.5.3.tar.bz2</programlisting>
+            <para>
+                It is available from the antlr site at <ulink url="http://www.antlr.org/download.html">C Target</ulink>.
+            </para>
+        </sect3>
+
+        <sect3 id="git_repository">
+            <title>From the Git repository</title>
+
+            <para>
+                The repository contains several versions of the code called <literal>branches</literal>
+                so you can fetch the latest version (<literal>master</literal>) or a stable version
+                from a maintenance branch. If you intend to contribute to the
+                development of ANTLR, then you should try using Git. As the code is
+                constantly evolving and features are added (or removed) every day,
+                you should have a look at the developers’ site and subscribe to the
+                <ulink role="online-location" url="https://groups.google.com/forum/#!forum/antlr-discussion">antlr-discussion</ulink> mailing list if you compile the code from Git.
+            </para>
+
+            <para>
+                The master branch
+                <programlisting>git clone https://github.com/antlr/antlr4.git</programlisting>
+            </para>
+
+            <para>
+                Specific branch/tag:
+                <programlisting>git clone https://github.com/antlr/antlr4.git
+cd antlr4
+git checkout -b taged_antlr 4.0</programlisting>
+                4.0 is a taged branch in the antlr4 repository
+            </para>
+        </sect3>
+    </sect2>
+
+    <sect2 id="dependencies">
+        <title>Autogen.sh</title>
+        <para>
+            If you are building ANTLR from the distributed source packages,
+            then won't need these step.
+        </para>
+        <para>
+            The <command>autogen.sh</command> script can launch
+            <command>./configure</command> script automaticaly. In this case
+            pass the <command>./configure</command> arguments to the
+            <command>./autogen.sh</command> command.
+            This will build antlr in the source directory.
+        </para>
+        <programlisting>./autogen.sh --prefix=/home/antlr/local</programlisting>
+
+        <para>
+            It can be a good idea to build the source in a separated directory.
+            Tell autogen.sh do not run .configure script :
+        </para>
+        <programlisting>export NOCONFIGURE=1
+./autogen.sh</programlisting>
+
+    </sect2>
+
+    <sect2 id="dependencies">
+        <title>Satisfy the dependencies</title>
+        <para>
+            On UNIX-like systems ANTLR uses the standard GNU build system,
+            using <application>autoconf</application> for package
+            configuration and resolving portability issues,
+            <application>automake</application> for building makefiles that
+            comply with the GNU Coding Standards, and
+            <application>libtool</application> for building shared libraries
+            on multiple platforms.
+        </para>
+
+        <para>
+            If you are building ANTLR from the distributed source packages,
+            then won't need these tools installed; the necessary pieces
+            of the tools are already included in the source packages. But
+            it's useful to know a bit about how packages that use these
+            tools work.
+        </para>
+
+        <para>
+            Before you can compile the ANTLR Runtime library, you need to have
+            various other tools and libraries installed on your
+            system. The two tools needed during the build process (as
+            differentiated from the tools used in when creating ANTLR
+            mentioned above such as <application>autoconf</application>)
+            are <command>pkg-config</command> and GNU make.
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <ulink
+                    url="http://www.freedesktop.org/software/pkgconfig">pkg-config</ulink>
+                    is a tool for tracking the compilation flags needed for
+                    libraries that are used by the ANTLR libraries. (For each
+                    library, a small <literal>.pc</literal> text file is installed
+                    in a standard location that contains the compilation flags
+                    needed for that library along with version number information.)
+                    <!-- The version of <command>pkg-config</command> needed to build
+                    ANTLR is mirrored in the <filename>dependencies</filename> directory
+                    on the <ulink url="ftp://ftp.antlr.org/pub/antlr/">ANTLR FTP
+                    site.</ulink> -->
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The ANTLR makefiles will mostly work with different versions
+                    of <command>make</command>, however, there tends to be
+                    a few incompatibilities, so the ANTLR team recommends
+                    installing <ulink url="http://www.gnu.org/software/make">GNU
+                    make</ulink> if you don't already have it on your system
+                    and using it. (It may be called <command>gmake</command>
+                    rather than <command>make</command>.)
+                </para>
+            </listitem>
+        </itemizedlist>
+
+    <para>
+      The libraries that ANTLR depends on are maintained separately.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          The GLib library provides core functionality
+          such as high level data types, Unicode manipulation, and
+          an object and type system to C programs. It is available
+          from the <ulink url="ftp://ftp.gtk.org/pub/gtk/v2.6/">GTK+ FTP site.</ulink>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <ulink url="http://www.gnu.org/software/libiconv/">GNU
+          libiconv library</ulink> is needed to build GLib if your
+          system doesn't have the <function>iconv()</function>
+          function for doing conversion between character
+          encodings. Most modern systems should have
+          <function>iconv()</function>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The libintl library from the <ulink
+          url="http://www.gnu.org/software/gettext/">GNU gettext
+          package</ulink> is needed if your system doesn't have the
+          <function>gettext()</function> functionality for handling
+          message translation databases.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+        The gtk-doc-tools library from the <ulink
+        url="https://www.gtk.org/gtk-doc/">GTK-Doc Project</ulink> is needed if you want generate the documentation API.
+        </para>
+      </listitem>
+    </itemizedlist>
+</sect2>
+
+<sect2 id="configuration">
+    <title>Configure</title>
+
+    <para>
+        In the toplevel of the directory <literal>SOURCE_DIRECTORY</literal> that is created, there will be
+        a shell script called <filename>configure</filename> which
+        you then run to take the template makefiles called
+        <filename>Makefile.am</filename> in the package and create
+        makefiles customized for your operating system. The <filename>configure</filename>
+        script can be passed various command line arguments to determine how
+        the package is built and installed. The most commonly useful
+        argument is the <systemitem>--prefix</systemitem> argument which
+        determines where the package is installed. To install a package
+        in <filename>/home/antlr/local</filename> you would run configure as:
+    </para>
+
+    <sect3>
+        <title>Configure in source directory</title>
+            <programlisting>cd SOURCE_DIRECTORY
+./configure --prefix=/home/antlr/local</programlisting>
+    </sect3>
+
+
+    <sect3>
+        <title>Configure in separated directory</title>
+            <programlisting>cd BUILD_RELEASE_DIRECTORY
+SOURCE_DIRECTORY/configure --prefix=/home/antlr/local</programlisting>
+    </sect3>
+
+    <para>
+        A full list of options can be found by running
+        <filename>configure</filename> with the
+        <systemitem>--help</systemitem> argument. In general, the defaults are
+        right and should be trusted.
+    </para>
+
+    <para>
+        Several environment variables are useful to pass to set before
+        running configure. <envar>CPPFLAGS</envar> contains options to
+        pass to the C compiler, and is used to tell the compiler where
+        to look for include files. The <envar>LDFLAGS</envar> variable
+        is used in a similar fashion for the linker. Finally the
+        <envar>PKG_CONFIG_PATH</envar> environment variable contains
+        a search path that <command>pkg-config</command> (see below)
+        uses when looking for for file describing how to compile
+        programs using different libraries. If you were installing ANTLR
+        dependencies into <filename>/home/antlr/local</filename>, you
+        might want to set these variables as:
+    </para>
+    <programlisting>CPPFLAGS="-I/home/antlr/local/include"
+LDFLAGS="-L/home/antlr/local/lib"
+PKG_CONFIG_PATH="/home/antlr/local/lib/pkgconfig"
+export CPPFLAGS LDFLAGS PKG_CONFIG_PATH</programlisting>
+    <para>
+        You may also need to set the <envar>LD_LIBRARY_PATH</envar>
+        environment variable so the systems dynamic linker can find
+        the newly installed libraries, and the <envar>PATH</envar>
+        environment program so that utility binaries installed by
+        the various libraries will be found.
+    </para>
+    <programlisting>LD_LIBRARY_PATH="/home/antlr/local/lib"
+PATH="/home/antlr/local/bin:$PATH"
+export LD_LIBRARY_PATH PATH</programlisting>
+</sect2>
+
+<sect2 id="extra-configuration-options">
+  <title>Configuration Options</title>
+
+    <para>
+      In addition to the normal options, the
+      <command>configure</command> script for the ANTLR library
+      supports a number of additional arguments. (Command line
+      arguments for the other ANTLR libraries are described in
+      the documentation distributed with the those libraries.)
+
+      <cmdsynopsis>
+        <command>configure</command>
+        <group>
+          <arg>--disable-modules=[lipsy|...]</arg>
+        </group>
+        <group>
+          <arg>--enable-modules=[lipsy|...]</arg>
+        </group>
+        <group>
+          <arg>--enable-debug=[no|minimum|yes]</arg>
+        </group>
+        <group>
+          <arg>--disable-visibility</arg>
+          <arg>--enable-visibility</arg>
+        </group>
+        <group>
+          <arg>--disable-gtk-doc</arg>
+          <arg>--enable-gtk-doc</arg>
+        </group>
+      </cmdsynopsis>
+    </para>
+
+
+      <formalpara>
+        <title><systemitem>--disable-modules and --enable-modules</systemitem></title>
+
+        <para>
+         Normally ANTLR will try to build the Lipsy text file format loaders
+         as little shared libraries that are loaded on demand.
+         The <option>--disable-modules</option> argument indicates that they should
+         all be built statically into the ANTLR library instead.
+         This is useful for people who need to produce statically-linked binaries.
+         If neither <option>--disable-modules</option> nor
+         <option>--enable-modules</option> is specified, then the configure script
+         will try to auto-detect whether shared modules work on your system.
+        </para>
+      </formalpara>
+
+
+
+    <formalpara>
+      <title><systemitem>--enable-debug</systemitem></title>
+
+      <para>
+       Turns on various amounts of debugging support. Setting this to 'no'
+       disables g_assert(), g_return_if_fail(), g_return_val_if_fail() and
+       all cast checks between different object types. Setting it to 'minimum'
+       disables only cast checks. Setting it to 'yes' enables
+       <link linkend="ANTLR-Debug-Options">runtime debugging</link>.
+       The default is 'minimum'.
+       Note that 'no' is fast, but dangerous as it tends to destabilize
+       even mostly bug-free software by changing the effect of many bugs
+       from simple warnings into fatal crashes. Thus
+       <option>--enable-debug=no</option> should <emphasis>not</emphasis>
+       be used for stable releases of ANTLR.
+      </para>
+    </formalpara>
+
+    <formalpara>
+      <title><systemitem>--disable-visibility</systemitem> and
+        <systemitem>--enable-visibility</systemitem></title>
+      <para>
+        The option <systemitem>--disable-visibility</systemitem>
+        turns off the use of ELF visibility attributes for linking
+        optimizations. This makes sense while changing ANTLR itself,
+        since the way in which ANTLR uses visibility attributes
+        forces a full rebuild of all source files for any header
+        modification.
+      </para>
+    </formalpara>
+
+    <formalpara>
+      <title><systemitem>--disable-gtk-doc</systemitem> and
+        <systemitem>--enable-gtk-doc</systemitem></title>
+
+      <para>
+        The <application>gtk-doc</application> package is
+        used to generate the reference documentation included
+        with ANTLR. By default support for <application>gtk-doc</application>
+        is disabled because it requires various extra dependencies
+        to be installed. If you have
+        <application>gtk-doc</application> installed and
+        are modifying ANTLR, you may want to enable
+        <application>gtk-doc</application> support by passing
+        in <systemitem>--enable-gtk-doc</systemitem>. If not
+        enabled, pre-generated HTML files distributed with ANTLR
+        will be installed.
+      </para>
+    </formalpara>
+
+  </sect2>
+
+  <sect2 id="building">
+    <title>Compile and test</title>
+
+    <para>
+      First make sure that you have the necessary external
+      dependencies installed: <command>pkg-config</command>, GNU make,
+      and libintl. To get detailed information about building
+      these packages, see the documentation provided with the
+      individual packages.
+      On a Linux system, it's quite likely you'll have all of these
+      installed already except for <command>pkg-config</command>.
+    </para>
+
+    <para>
+        After you've run
+        <filename>configure</filename>, you then run the
+        <command>make</command> command to build the package and install
+        it.
+    </para>
+    <programlisting>make</programlisting>
+    <para>
+      If one of the <filename>configure</filename> scripts fails or running
+      <command>make</command> fails, look closely at the error
+      messages printed; these will often provide useful information
+      as to what went wrong. When <filename>configure</filename>
+      fails, extra information, such as errors that a test compilation
+      ran into, is found in the file <filename>config.log</filename>.
+      Looking at the last couple of hundred lines in this file will
+      frequently make clear what went wrong. If all else fails, you
+      can ask for help on the antlr-discution mailing list.
+      See <xref linkend="antlr-resources"/> for more information.
+    </para>
+
+    <programlisting>make check</programlisting>
+  </sect2>
+
+    <sect2 id="install">
+      <title>Install</title>
+
+        <para>
+          Then install the ANTLR libraries in the order:
+          GLib then ANTLR. For each library, follow the
+          steps of <literal>configure</literal>, <literal>make</literal>,
+          <literal>make install</literal> mentioned above. If you're
+          lucky, this will all go smoothly, and you'll be ready to
+          <link linkend="antlr-compiling">start compiling your own ANTLR
+            applications</link>. You can test your ANTLR installation
+          by running the <command>antlr-demo</command> program that
+          ANTLR installs.
+        </para>
+
+        <programlisting>make install</programlisting>
+
+        <para>
+            If you don't have permission to write to the directory you are
+            installing in, you may have to change to root temporarily before
+            running <literal>make install</literal>. Also, if you are
+            installing in a system directory, on some systems (such as
+            Linux), you will need to run <command>ldconfig</command> after
+            <literal>make install</literal> so that the newly installed
+            libraries will be found.
+        </para>
+
+      <!--para>in the system</para>
+      <para>
+      in local:
+        antlr.pc
+        PKG_CONFIG_PATH
+        LD_LIBRARY_PATH
+        The goal of installation is to use it as :
+        gcc `pkg-config - -libs - -cflags antlr-4.0` hello.c
+      </para>
+      <para>threedparty of project</para-->
+    </sect2>
+
+
+    <sect2 id="uninstall">
+        <title>Uninstall</title>
+        <para>
+            After <command>make</command> or <command>make check</command>
+            you can remove the program binaries and object files from the
+            build directory by typing :
+            <programlisting>make clean</programlisting>
+        </para>
+
+        <para>
+            To also remove the
+            files that <command>configure</command> created (so you can compile the package for
+            a different kind of computer), type :
+            <programlisting>make distclean</programlisting>
+        </para>
+
+        <para>
+            There is also a <command>make maintainer-clean</command> target, but that is intended mainly
+            for the package's developers.  If you use it, you may have to get
+            all sorts of other programs in order to regenerate files that came
+            with the distribution.
+        </para>
+
+        <para>
+            After <command>make install</command>. Often, you can also type
+            <command>make uninstall</command> to remove the installed
+            files again.
+            <programlisting>make uninstall</programlisting>
+        </para>
+    </sect2>
+
+</sect1>

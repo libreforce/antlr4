@@ -1,0 +1,20 @@
+digraph ATN {
+rankdir=LR;
+s154{fontsize:11, label:"154", shape:"doublecircle", fixedsize:true, width:.6};
+s515{fontsize:11,label:"515", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s516{fontsize:11,label:"516", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s517{fontsize:11,label:"{&rarr;\n517+\nd=13|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1};
+s518{fontsize:11,label:"&larr;\n518", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s519{fontsize:11,label:"{519+\nd=14|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1};
+s520{fontsize:11,label:"520", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s153{fontsize:11,label:"153", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s153 -> s517 [fontname="Times-Italic", label="&epsilon;"];
+s517:p0 -> s515 [fontname="Times-Italic", label="&epsilon;"];
+s517:p1 -> s516 [fontname="Times-Italic", label="&epsilon;"];
+s515 -> s518 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{'$', '0'..'9', 'A'..'Z', '_', 'a'..'z'}", arrowhead = normal];
+s516 -> s518 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<DOT>", arrowhead = normal];
+s518 -> s519 [fontname="Times-Italic", label="&epsilon;"];
+s519:p0 -> s517 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s519:p1 -> s520 [fontname="Times-Italic", label="&epsilon;"];
+s520 -> s154 [fontname="Times-Italic", label="&epsilon;"];
+}

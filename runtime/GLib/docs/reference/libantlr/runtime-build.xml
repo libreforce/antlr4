@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding="ISO-8859-1"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+
+<chapter id="chapter-build">
+  <title>Compiling the ANTLR library</title>
+
+  <xi:include href="runtime-build-linux.xml" />
+  <xi:include href="runtime-build-win.xml" />
+  <xi:include href="runtime-build-mac.xml" />
+
+<sect1>
+    <title>OS and Distribution Specific</title>
+    <itemizedlist>
+        <listitem>
+            <para><link linkend="runtime-build-linux-ubuntu">Ubuntu - apt-get</link></para>
+        </listitem>
+        <listitem>
+            <para><link linkend="runtime-build-linux-fedora">Fedora - yum</link></para>
+        </listitem>
+    </itemizedlist>
+
+    <xi:include href="runtime-build-linux-ubuntu.xml" />
+    <xi:include href="runtime-build-linux-fedora.xml" />
+
+</sect1>
+
+</chapter>

@@ -1,0 +1,21 @@
+digraph ATN {
+rankdir=LR;
+s10{fontsize:11, label:"10", shape:"doublecircle", fixedsize:true, width:.6};
+s176{fontsize:11,label:"176", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s177{fontsize:11,label:"177", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s178{fontsize:11,label:"178", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s179{fontsize:11,label:"179", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s180{fontsize:11,label:"180", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s181{fontsize:11,label:"{&rarr;\n181\nd=1|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1};
+s182{fontsize:11,label:"&larr;\n182", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s9{fontsize:11,label:"9", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s9 -> s181 [fontname="Times-Italic", label="&epsilon;"];
+s181:p0 -> s176 [fontname="Times-Italic", label="&epsilon;"];
+s181:p1 -> s179 [fontname="Times-Italic", label="&epsilon;"];
+s176 -> s177 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'a'", arrowhead = normal];
+s179 -> s180 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'&'", arrowhead = normal];
+s177 -> s178 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'n'", arrowhead = normal];
+s180 -> s182 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'&'", arrowhead = normal];
+s178 -> s182 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'d'", arrowhead = normal];
+s182 -> s10 [fontname="Times-Italic", label="&epsilon;"];
+}

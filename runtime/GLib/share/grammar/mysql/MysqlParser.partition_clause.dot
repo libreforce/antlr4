@@ -1,0 +1,19 @@
+var dot = {
+  states: {
+    "s73": {fontsize:11, label:"73", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s391: {fontsize:11,label:"391", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s72: {fontsize:11,label:"72", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s392: {fontsize:11,label:"392", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s393: {fontsize:11,label:"393", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s394: {fontsize:11,label:"394", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s395: {fontsize:11,label:"395", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s72, target: "s391", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s391, target: "s392", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'partition'", arrowhead:"normal"},
+    {src: s392, target: "s393", fontsize:11, fontname:"Courier", arrowsize:.7, label: "'('", arrowhead:"normal"},
+    {src: s393, target: "s394", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<partition_names>", arrowhead:"normal"},
+    {src: s394, target: "s395", fontsize:11, fontname:"Courier", arrowsize:.7, label: "')'", arrowhead:"normal"},
+    {src: s395, target: "s73", fontname:"Times-Italic", label:"&#949;psilon"}
+  }
+};

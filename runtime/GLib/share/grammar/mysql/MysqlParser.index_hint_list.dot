@@ -1,0 +1,26 @@
+var dot = {
+  states: {
+    "s65": {fontsize:11, label:"65", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s64: {fontsize:11,label:"64", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s352: {fontsize:11,label:"&larr;\n352", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s353: {fontsize:11,label:"{353*\nd=42|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s354: {fontsize:11,label:"354", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s355: {fontsize:11,label:"355*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s348: {fontsize:11,label:"348", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s349: {fontsize:11,label:"349", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s350: {fontsize:11,label:"350", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s351: {fontsize:11,label:"&rarr;\n351*", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s64, target: "s348", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s348, target: "s353", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<index_hint>", arrowhead:"normal"},
+    {src: s353, target: "s351", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s353, target: "s354", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s351, target: "s349", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s354, target: "s65", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s349, target: "s350", fontsize:11, fontname:"Courier", arrowsize:.7, label: "','", arrowhead:"normal"},
+    {src: s350, target: "s352", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<index_hint>", arrowhead:"normal"},
+    {src: s352, target: "s355", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s355, target: "s353", fontname:"Times-Italic", label:"&#949;psilon", style:"dashed"}
+  }
+};

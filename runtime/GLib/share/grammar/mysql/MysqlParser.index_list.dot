@@ -1,0 +1,26 @@
+var dot = {
+  states: {
+    "s71": {fontsize:11, label:"71", shape:"doublecircle", fixedsize:true, width:.6}, 
+    s384: {fontsize:11,label:"384", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s385: {fontsize:11,label:"385", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s386: {fontsize:11,label:"&rarr;\n386*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s387: {fontsize:11,label:"&larr;\n387", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s388: {fontsize:11,label:"{388*\nd=47|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1}, 
+    s389: {fontsize:11,label:"389", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s70: {fontsize:11,label:"70", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s390: {fontsize:11,label:"390*", shape:"circle", fixedsize:true, width:.55, peripheries:1}, 
+    s383: {fontsize:11,label:"383", shape:"circle", fixedsize:true, width:.55, peripheries:1}
+  },
+  transitions: {
+    {src: s70, target: "s383", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s383, target: "s388", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<index_name>", arrowhead:"normal"},
+    {src: s388, target: "s386", transition: 0, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s388, target: "s389", transition: 1, fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s386, target: "s384", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s389, target: "s71", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s384, target: "s385", fontsize:11, fontname:"Courier", arrowsize:.7, label: "','", arrowhead:"normal"},
+    {src: s385, target: "s387", fontsize:11, fontname:"Courier", arrowsize:.7, label: "<index_name>", arrowhead:"normal"},
+    {src: s387, target: "s390", fontname:"Times-Italic", label:"&#949;psilon"},
+    {src: s390, target: "s388", fontname:"Times-Italic", label:"&#949;psilon", style:"dashed"}
+  }
+};

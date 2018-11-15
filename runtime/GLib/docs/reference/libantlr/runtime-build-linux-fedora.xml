@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" []>
+<article id="runtime-build-linux-fedora">
+  <title>Compiling ANTLR on Fedora</title>
+
+    <!--figure>
+      <mediaobject>
+        <imageobject> <! - - this is for HTML output - - >
+          <imagedata fileref="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Ubuntu_logo.svg/2000px-Ubuntu_logo.svg.png" format="PNG" align="center" scalefit="0.4"/>
+        </imageobject>
+        <imageobject> <! - - this is for PDF output - - >
+          <imagedata fileref="glue.jpg" format="JPG" align="center"/>
+        </imageobject>
+      </mediaobject>
+    </figure-->
+
+
+<procedure>
+        <step>
+                <title>Installing dependencies</title>
+                <para>
+                        <programlisting language="bash">sudo yum update</programlisting>
+                        <programlisting language="bash">sudo yum groupinstall "Development Tools"</programlisting>
+                        <programlisting language="bash">sudo yum install libglib2.0-dev gettext</programlisting>
+                        If you want to enable --antlr-module=xml to export AST, you need to install libxml :
+                        <programlisting language="bash">sudo apt-get install libxml2-dev</programlisting>
+                        If you want to be able generate package, you need to install autotools :
+                        <programlisting language="bash">sudo yum install autoconf automake intltool libtool</programlisting>
+                        If you want to be able to generate documentation you need to install gtk-doc :
+                        <programlisting language="bash">sudo yum install gtk-doc-tools</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Getting source from Github</title>
+                <para>
+                        Structure drectory:
+                        <programlisting language="bash">cd /home/antlr/local</programlisting>
+                        <programlisting language="bash">mkdir -p ./src/antlr</programlisting>
+                        <programlisting language="bash">cd ./src/antlr</programlisting>
+                        <programlisting language="bash">git clone https://github.com/antlr/antlr4.git</programlisting>
+                        <programlisting>Clonage dans 'antlr4'...
+remote: Counting objects: 87277, done.
+remote: Total 87277 (delta 0), reused 0 (delta 0), pack-reused 87277
+Réception d'objets: 100% (87277/87277), 55.62 MiB | 1.16 MiB/s, fait.
+Résolution des deltas: 100% (51260/51260), fait.
+Vérification de la connectivité... fait.</programlisting>
+                        <programlisting language="bash">ls ./antlr4</programlisting>
+                        <programlisting>antlr4-maven-plugin  contributors.txt  README.md          tool-testsuite
+appveyor.yml         doc               runtime
+build                LICENSE.txt       runtime-testsuite
+CHANGES.txt          pom.xml           tool</programlisting>
+                        <programlisting language="bash">cd ./antlr4</programlisting>
+                        <programlisting language="bash">git tags -l</programlisting>
+                        <programlisting>4.0
+...
+antlr4-master-4.5.3</programlisting>
+                        <programlisting language="bash">git checkout tags/4.0 -b antlr-4.0</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Configuring and Compiling</title>
+                <para>
+                        Only from git source code :
+                        <programlisting language="bash">cd ./antlr4/runtime/GLib</programlisting>
+                        <!--programlisting language="bash">export NOCONFIGURE=1</programlisting-->
+                        <programlisting language="bash">NOCONFIGURE=1 &amp;&amp; ./autogen.sh</programlisting>
+                        Structure drectory:
+                        <programlisting language="bash">cd /home/antlr/local</programlisting>
+                        <programlisting language="bash">mkdir -p ./build/antlr4-glib/release</programlisting>
+                        Configure :
+                        <programlisting language="bash">cd ./build/antlr4-glib/release</programlisting>
+                        <programlisting language="bash">../../../src/antlr/antlr4/runtime/GLib/configure</programlisting>
+                        <programlisting>...
+        GAntlr-runtime 4.5.3
+        ====================
+
+        Modules:              [static|shared]
+          * Lipsy             no
+          * Railroad          no
+          * LaTeX             no
+          * Svg               no
+        Debugging:            no
+        Documentation:        no
+</programlisting>
+                        Make :
+                        <programlisting language="bash">make</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Installing</title>
+                <para>
+                        <programlisting language="bash">make install</programlisting>
+                </para>
+        </step>
+
+        <step>
+                <title>Uninstalling</title>
+                <para>
+                        <programlisting language="bash">make uninstall</programlisting>
+                </para>
+        </step>
+
+
+</procedure>
+
+</article>

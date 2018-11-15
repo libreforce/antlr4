@@ -1,0 +1,9 @@
+SUBDIRS=
+
+if ENABLE_DEMO_MYSQL
+SUBDIRS+= mysql
+endif
+
+if ENABLE_DEMO_PHP
+SUBDIRS+= php
+endif

@@ -1,0 +1,228 @@
+TODO:
+
+Faire les finally
+Faire les GError : antlr_ll1_analyzer_LOOK
+
+/!\ Refaire tout les test avec le debug trace pour vérifier que tout ce passe bien /!\
+
+
+
+peut etre revoir antlr_ordered_atn_config_set_new
+car AntlrDFAState::edges ne correspond pas a Java/eclipse
+
+les action ne sont pas bonne...qdump__ + GArray
+
+FIXME: dfaState->predicates convert it to GPtrArray
+FIXME: Pourquoi antlr_lexer_action_executor_append() retourne une nouvelle instance ????
+
+REFACTORME: Essayer d'Utiliser des GPtrArray au lieu de GList a tout va.
+
+Travailler encore les template stg
+dans GLib.stg, <if (sempredFuncs)> faire des static de <sempredFuncs.values; separator="\n"> au lieu d'etre public
+revoir le type de antlr_recognizer_::ruleIndex de gint vers gsize
+REFACTOR actions et sempred dans Parser et Lexer
+
+
+dans antlr.py qdump :
+Dans la fonction qdump__AntlrATNConfigSet le membre <GList*> "configs" peut prendre un object de type AntlrLexerATNConfig ou AntlrATNConfig
+Bug à AntlrATNConfigSet_toString
+"""
+name = g_type_name_from_instance(value.address)
+if name=="AntlrLexerATNConfigSet":
+        value = value["parent_instance"].cast(gdb.lookup_type('AntlrATNConfigSet').pointer())
+        logging.debug('%s' % value)
+        AntlrLexerATNConfig
+"""
+
+Not implemented:
+antlr_dfa_set_precedence_start_state
+
+Bug possible à :
+antlr_parser_atn_simulator_add_dfa_edge
+   <g_ptr_array_insert(from->edges, t+1, to);>
+   TODO initialiser le tableau à ZERO et utiliser <g_ptr_array_index(from->edges, t+1) = to;> au lieux de insert
+
+todo implemente antlr_dfa_get_precedence_start_state
+
+/home/gaulouis/local/src/tmp/antlr4.6
+
+Dans les template de antlr-4-6 ajouter le _TOKEN_ et _RULE_ dans l'enum comme pour _SYMBOLE_
+
+Template GLib.stg: review LeftRecursiveRuleFunctionHeader
+                          RuleContextDeclHeader=>   *<r.name; format=\"toSnack\">
+                 : convention de nomage des variable...
+
+
+
+TODO: pkg-config --modversion antlr-4.0
++create antlr-4.0.pc on install
++export *.h
+
+TODO: implement module export Lisp
+antlr_rule_context_interface_tree_to_string_tree
+
+
+
+Mais avant corriger les fuite de mémoire du le FlexMap n'est pas libéré ...
+(Interval et Config on l'air d'être instancier bcp)
+
+antlr_parser_atn_simulator_get_conflicting_alts peut surement etre optimizé
+
+
+antlr_init(&argc, &argv)
+antlr_parser_factory_from_string("grammar Mysql;\n statement: query_select|query_update; query_select: 'SELECT' clause_columns;")
+antlr_parser_factory_from_filename("mysql.g")
+antlr_parser_load_from_string(antlr_parser_factory("mysql"), "SELECT 1+1")// load "libmysql.so" or mysql.dll
+antlr_parser_load_from_filename(parser, "script.sql")
+AntlrContext *ctx = antlr_parser_parse(parser, "statement", &error);
+AntlrContext *ctx = antlr_parser_parse_from_string(parser, "statement", "SELECT 1+1", &error);
+antlr_quit()
+
+
+- [Java] Fonctionnality tests
+- [xml] Documentation- build user, build developper, run test user, run test dev; linux, win, mac
+        po translation user
+- [css] Error dans le fichier scrollnav.js. utiliser onload
+- [C] antlr_init() ANTLR_DEBUG env; --antlr-debug=retry... --antlr-no-debug=all
+        #if defined(ANTLR_ENABLE_DEBUG) antlr_parser_atn_simulator_debug = set TRUE from command line
+- [C] norme de codage:
+      standardiser les class fille : retourner le type de la class mere
+      standardiser le nom des variables : snack_case
+- [C] XPath
+- [C] Visitor
+- [C] Error manager
+- [C] Exception GError (extends enum GErrorAltEvailable)
+- [C] incoherence:
+        antlr_ordered_atn_config_set_new
+        antlr_star_loopback_state_get_loop_entry_state
+        in antlr_lexer_atn_simulator_compute_target_state
+          the use of antlr_ordered_atn_config_set_new is object but casted after
+          antlr_flexible_hash_map_new semble mal implementé. N'est-ce pas u Map+List
+        antlr_config_set Map<Config, Map<Config>> -> Map<Config>
+- [C] not implemented: antlr_parser_rule_context_... get_text ?
+                       antlr_parser_rule_context_get_token
+
+- [stg] <class_()> <lexer_class_()> <lexer_class_()> make error
+    my_lexer_class_object_dispose need to call parent destructor
+
+Distribution :
+- pkg-config pc file
+
+
+G_SLICE=always-malloc G_DEBUG=gc-friendly valgrind --leak-check=full ./antlr-demo.exe
+
+* Utiliser GPtrArray pour éviter d'utiliser my_pointer_object_unref/my_object_unref
+* Ajouter le theme Antlr a gtk-doc : /home/gaulouis/local/share/gtk-doc/data dans tools/gtk-doc
+
+
+[ ] GString reference
+
+[ ] antlr_int_iset_equals() signature need param
+[ ] antlr_int_iset_add_all() do not nedd chained return
+
+[ ] pour les object hierarchique , retourner le type de base pour les constructeur (comme GtkWidget)
+
+[ ] check all antlr_XXX_hash_code() signature (return guint ? )
+
+[ ] rule_names return string but GString is not ref pointer
+
+[ ] Functions then throw Exception need to return NULL if error. Context* parse_stat(self, GError *error)
+
+[ ] file_stream need to return NULL if error
+
+[ ] antlr/runtime.h
+    antlr/runtime-tree.h
+    antlr/runtime-misc.h
+    antlr/runtime-atn.h
+    antlr/runtime-dfa.h
+
+see : https://github.com/DanMcLaughlin/antlr4/tree/master/tool/src/org/antlr/v4/codegen/target
+
+
+
+
+
+Welcome to the antlr4-glib wiki!
+
+Simple C example
+```C
+#include <antlr/runtime.h>
+#include "antlr-sql.h" // SqlLexer, SqlParser, SqlContextStatement, SqlListener
+int
+main (int argc, char *argv[])
+{
+    GError *error = NULL;
+    AntlrFileStream *file_stream;
+    AntlrCommonTokenStream *tokens;
+    AntlrParseTreeWalker *walker;
+    SqlLexer *lexer;
+    SqlParser *parser;
+    SqlContextStatement *stat_context;
+    SqlListener *listener;
+
+    const gchar *filename = "/home/user/local/src/antlr-glib/share/scripts/test.sql";
+    file_stream = antlr_file_stream_new_from_filename_encoding(filename, NULL, &error);
+    if (error) {
+        g_print("Error: %s\n", error->message);
+        g_object_unref(error);
+        return 1;// exit
+    }
+
+    // Get our lexer
+    lexer = sql_lexer_new_with_char_stream(ANTLR_CHAR_STREAM(file_stream));
+
+    // Get a list of matched tokens
+    tokens = antlr_common_token_stream_new_with_token_source(ANTLR_TOKEN_SOURCE(lexer));
+
+    // Pass the tokens to the parser
+    parser = sql_parser_new_with_token_stream( ANTLR_TOKEN_STREAM(tokens) );
+
+    // Specify our entry point
+    stat_context = sql_parser_parse_statement(parser, &error);
+    if (error) {
+        g_print("Error: %s\n", error->message);
+        g_object_unref(error);
+        return 1;// exit
+    }
+
+    // Walk it and attach our listener
+    walker = antlr_parse_tree_walker_new();
+    listener = sql_listener_new();
+    antlr_parse_tree_walker_walk(walker,
+                                 ANTLR_PARSE_TREE_LISTENER(listener),
+                                 ANTLR_PARSER_RULE_CONTEXT(stat_context));
+
+    // Free memory
+    g_object_unref(lexer);
+    g_object_unref(tokens);
+    g_object_unref(parser);
+    g_object_unref(stat_context);
+    g_object_unref(walker);
+    g_object_unref(listener);
+
+    return 0;
+}
+```
+
+Simple C listener implementation
+```C
+static void
+sql_listener_interface_parser_tree_listener_init(AntlrParserTreeListenerInterface *iface)
+{
+    iface->statement = sql_listener_enter_statement;
+    // ...
+}
+
+static void
+sql_listener_enter_statement(AntlrParserTreeListener *self, AntlrParserRuleContext *context)
+{
+    SqlContextStatement *ctx = SQL_CONTEXT_STATEMENT(context);
+    SqlListener *listener = SQL_LISTENER(self);
+    // Make your stuff
+
+    g_print("Statement: %s\n", antlr_parser_rule_context_get_text(context));
+}
+```
+
+bison sql parser:
+https://www.safaribooksonline.com/library/view/flex-bison/9780596805418/ch04.html

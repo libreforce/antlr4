@@ -1,0 +1,1854 @@
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2015 Dan McLaughlin, Mike Lischke
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+import "Files.stg" // All file specific stuff.
+
+class_lexer() ::= <<
+<NS_name()><LEXER_name()>
+>>
+ClassLexer() ::= <<
+<NS_Type()><LEXER_Type()>
+>>
+CLASS_LEXER() ::= <<
+<NS_MACRO()><LEXER_MACRO()>
+>>
+TYPE_LEXER() ::= <<
+<NS_MACRO()>TYPE_<LEXER_MACRO()>
+>>
+
+
+class_parser() ::= <<
+<NS_name()><PARSER_name()>
+>>
+ClassParser() ::= <<
+<NS_Type()><PARSER_Type()>
+>>
+CLASS_PARSER() ::= <<
+<NS_MACRO()><PARSER_MACRO()>
+>>
+TYPE_PARSER() ::= <<
+<NS_MACRO()>TYPE_<PARSER_MACRO()>
+>>
+
+class_recognizer() ::= <<
+<if (parser)><class_parser()><endif><if (lexer)><class_lexer()><endif>
+>>
+ClassRecognizer() ::= <<
+<if (parser)><ClassParser()><endif><if (lexer)><ClassLexer()><endif>
+>>
+
+class_context(v) ::= <<
+<NS_name()><CONTEXT_name(v)>
+>>
+ClassContext(v) ::= <<
+<NS_Type()><CONTEXT_Type(v)>
+>>
+CLASS_CONTEXT(v) ::= <<
+<NS_MACRO()><CONTEXT_MACRO(v)>
+>>
+TYPE_CONTEXT(v) ::= <<
+<NS_MACRO()>TYPE_<CONTEXT_MACRO(v)>
+>>
+IS_CONTEXT(v) ::= <<
+<NS_MACRO()>IS_<CONTEXT_MACRO(v)>
+>>
+
+
+
+class_listener() ::= <<
+<NS_name()><LISTENER_name()>
+>>
+ClassListener() ::= <<
+<NS_Type()><LISTENER_Type()>
+>>
+CLASS_LISTENER() ::= <<
+<NS_MACRO()><LISTENER_MACRO()>
+>>
+TYPE_LISTENER() ::= <<
+<NS_MACRO()>TYPE_<LISTENER_MACRO()>
+>>
+IS_LISTENER() ::= <<
+<NS_MACRO()>IS_<LISTENER_MACRO()>
+>>
+
+
+class_base_listener() ::= <<
+<NS_name()><BASE_LISTENER_name()>
+>>
+ClassBaseListener() ::= <<
+<NS_Type()><BASE_LISTENER_Type()>
+>>
+CLASS_BASE_LISTENER() ::= <<
+<NS_MACRO()><BASE_LISTENER_MACRO()>
+>>
+TYPE_BASE_LISTENER() ::= <<
+<NS_MACRO()>TYPE_<BASE_LISTENER_MACRO()>
+>>
+IS_BASE_LISTENER() ::= <<
+<NS_MACRO()>IS_<BASE_LISTENER_MACRO()>
+>>
+
+
+cppTypeInitMap ::= [
+    "int":"0",
+    "long":"0",
+    "float":"0.0f",
+    "double":"0.0",
+    "bool":"false",
+    "short":"0",
+    "char":"0",
+    default: "nullptr" // anything other than a primitive type is an object
+]
+
+LexerHeader(lexer, atn, actionFuncs, sempredFuncs, superClass = {AntlrLexer}) ::= <<
+<namedActions.context>
+
+
+#ifndef __<CLASS_LEXER()>_H__
+#define __<CLASS_LEXER()>_H__
+
+#include <"<glib-object.h>" >
+
+G_BEGIN_DECLS
+
+<if (lexer.tokens)>
+typedef enum _<ClassLexer()>Symbols  <ClassLexer()>Symbols;
+<endif>
+<if (lexer.channels)>
+typedef enum _<ClassLexer()>Channels <ClassLexer()>Channels;
+<endif>
+<if (rest(lexer.modes))>
+typedef enum _<ClassLexer()>Rules    <ClassLexer()>Rules;
+<endif>
+
+
+<if (lexer.tokens)>
+enum _<ClassLexer()>Symbols {
+  <lexer.tokens: {k | <SYMBOL_MACRO(k)> = <lexer.tokens.(k)>}; separator=", ", wrap, anchor>
+};
+<endif>
+
+<if (lexer.channels)>
+enum _<ClassLexer()>Channels {
+  <lexer.channels: {k | <CHANNEL_MACRO(k)> = <lexer.channels.(k)>}; separator=", ", wrap, anchor>
+};
+<endif>
+
+<if (rest(lexer.modes))>
+enum _<ClassLexer()>Rules {
+  <rest(lexer.modes): {m | <RULE_MACRO(m)> = <i>,}; separator="\n", anchor>
+};
+<endif>
+
+
+
+#define <TYPE_LEXER()>            (<class_lexer()>_get_type())
+#define <CLASS_LEXER()>(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), <TYPE_LEXER()>, <ClassLexer()>))
+#define <CLASS_LEXER()>_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  <TYPE_LEXER()>, <ClassLexer()>Class))
+#define <NS_MACRO()>IS_<LEXER_MACRO()>(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), <TYPE_LEXER()>))
+#define <NS_MACRO()>IS_<LEXER_MACRO()>_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  <TYPE_LEXER()>))
+#define <CLASS_LEXER()>_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  <TYPE_LEXER()>, <ClassLexer()>Class))
+
+typedef struct _<ClassLexer()>      <ClassLexer()>;
+typedef struct _<ClassLexer()>Class <ClassLexer()>Class;
+
+struct _<ClassLexer()> {
+    <"/*< private >*/">
+    <superClass> parent_instance;
+
+    <"/*< public >*/">
+    <namedActions.members>
+};
+
+struct _<ClassLexer()>Class {
+    <"/*< private >*/">
+    <superClass>Class parent_class;
+};
+
+GType <class_lexer()>_get_type(void) G_GNUC_CONST;
+<ClassLexer()> *<class_lexer()>_new();
+
+<ClassLexer()> *<class_lexer()>_new_with_char_stream (AntlrCharStream *char_stream);
+
+void <class_lexer()>_atn_free ();
+void <class_lexer()>_decision_to_dfa_free ();
+void <class_lexer()>_token_names_free();
+
+
+<if (actionFuncs)>
+//virtual void <class_lexer()>_action(<ClassLexer()>* self, AntlrRuleContext *context, size_t ruleIndex, size_t actionIndex);
+<endif>
+<if (sempredFuncs)>
+//virtual gboolean <class_lexer()>_sempred(<ClassLexer()>* self, AntlrRuleContext *local_context, size_t ruleIndex, size_t predicateIndex);
+<endif>
+
+<namedActions.declarations>
+
+// Individual action functions triggered by action() above.
+<actionFuncs.values; separator="\n">
+
+// Individual semantic predicate functions triggered by sempred() above.
+<sempredFuncs.values; separator="\n">
+
+
+G_END_DECLS
+
+#endif /* __<CLASS_LEXER()>_H__ */
+
+>>
+
+Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass = {AntlrLexer}) ::= <<
+
+
+#include <"<glib-object.h>" >
+
+#include "antlr-runtime/types.h"
+//#include "antlr-runtime/char-stream.h"
+
+#include "antlr-runtime/misc/object.h"
+#include "antlr-runtime/misc/bit-set.h"
+#include "antlr-runtime/misc/int-iset.h"
+#include "antlr-runtime/misc/interval.h"
+#include "antlr-runtime/vocabulary.h"
+#include "antlr-runtime/vocabulary-impl.h"
+#include "antlr-runtime/misc/interval-set.h"
+#include "antlr-runtime/misc/integer-list.h"
+#include "antlr-runtime/misc/integer-stack.h"
+#include "antlr-runtime/atn/transition.h"
+#include "antlr-runtime/atn/lexer-action.h"
+#include "antlr-runtime/atn/atn-state.h"
+#include "antlr-runtime/atn/semantic-context.h"
+#include "antlr-runtime/atn/config.h"
+#include "antlr-runtime/atn/config-set.h"
+#include "antlr-runtime/atn/rule-stop-state.h"
+#include "antlr-runtime/atn/rule-start-state.h"
+#include "antlr-runtime/atn/atn.h"
+#include "antlr-runtime/atn/prediction-context.h"
+#include "antlr-runtime/atn/prediction-context-cache.h"
+#include "antlr-runtime/atn/atn-simulator.h"
+#include "antlr-runtime/atn/lexer-action-executor.h"
+#include "antlr-runtime/atn/decision-state.h"
+#include "antlr-runtime/atn/atn-deserialization-options.h"
+#include "antlr-runtime/atn/atn-deserializer.h"
+#include "antlr-runtime/atn/lexer-atn-simulator.h"
+
+#include "antlr-runtime/dfa/dfa-state.h"
+#include "antlr-runtime/dfa/dfa.h"
+
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/recognizer.h"
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/token-factory.h"
+#include "antlr-runtime/lexer.h"
+
+
+<(superClass); format="include_super_class">
+
+#include "<file.lexer.name>.h"
+
+
+// We own the ATN which in turn owns the ATN states.
+static AntlrATN *<class_lexer()>_atn = NULL;// AntlrATN * || GArray *
+static GPtrArray   *<class_lexer()>_decision_to_dfa = NULL;// of AntlrDFA*
+static AntlrPredictionContextCache *<class_lexer()>_shared_context_cache = NULL;
+static AntlrPredictionContextCache*
+<class_lexer()>_get_shared_context_cache ()
+{
+    if (!<class_lexer()>_shared_context_cache) {
+        <class_lexer()>_shared_context_cache = antlr_prediction_context_cache_new();
+    }
+    return <class_lexer()>_shared_context_cache;
+}
+
+<! only one segment, can be inlined !>
+static guint <class_lexer()>_serialized_atn[] = {
+  <atn>
+};
+
+static AntlrATN*
+<class_lexer()>_get_atn ()
+{
+    if (!<class_lexer()>_atn) {
+        AntlrATNDeserializer *deserializer = antlr_atn_deserializer_new_full(NULL);
+        <class_lexer()>_atn = antlr_atn_deserializer_deserialize(deserializer, <class_lexer()>_serialized_atn, G_N_ELEMENTS(<class_lexer()>_serialized_atn));
+        g_object_unref(deserializer);
+    }
+    return <class_lexer()>_atn;
+}
+
+void
+<class_lexer()>_atn_free ()
+{
+    if (<class_lexer()>_atn!=NULL) {
+        g_clear_object(&<class_lexer()>_atn);
+    }
+}
+
+
+void
+<class_lexer()>_decision_to_dfa_free ()
+{
+    if (<class_lexer()>_decision_to_dfa!=NULL) {
+        g_ptr_array_set_free_func(<class_lexer()>_decision_to_dfa, (GDestroyNotify)g_object_unref);
+        g_ptr_array_free(<class_lexer()>_decision_to_dfa, TRUE);
+    }
+    <class_lexer()>_decision_to_dfa=NULL;
+}
+
+static GPtrArray*
+<class_lexer()>_get_decision_to_dfa (<ClassLexer()> *lexer)
+{
+    if (!<class_lexer()>_decision_to_dfa) {
+        AntlrATN *atn = <class_lexer()>_get_atn();
+        gint size = antlr_atn_get_number_of_decisions(atn);
+        <class_lexer()>_decision_to_dfa = g_ptr_array_sized_new(size);
+        int i;
+        for (i = 0; i \< size; i++) {
+            AntlrDFA *v = antlr_dfa_new_with_decision_state_and_decision(antlr_atn_get_decision_state(atn, i), i);
+            g_ptr_array_insert(<class_lexer()>_decision_to_dfa, i, v);
+        }
+    }
+    return <class_lexer()>_decision_to_dfa;
+}
+
+
+
+static gchar* <class_lexer()>__RULE_NAMES[] = {
+    <lexer.ruleNames: {r | "<r>"}; separator = ", ", wrap, anchor>
+};
+
+static gchar* <class_lexer()>__MODE_NAMES[] = {
+    <lexer.modes: {m | "<m>"}; separator = ", ", wrap, anchor>
+};
+
+static gchar* <class_lexer()>__LITERAL_NAMES[] = {
+    <lexer.literalNames: {t | <t>}; null = "\"\"", separator = ", ", wrap, anchor>
+};
+
+static gchar* <class_lexer()>__SYMBOLIC_NAMES[] = {
+    <lexer.symbolicNames: {t | <t>}; null = "\"\"", separator = ", ", wrap, anchor>
+};
+
+
+
+<"/* private functions */" >
+
+static GArray*
+<class_lexer()>_symbolic_names_to_array () {
+    GArray *array = g_array_new(FALSE, FALSE, sizeof(GString*));
+
+    int i;
+    for (i=0; i\<G_N_ELEMENTS(<class_lexer()>__SYMBOLIC_NAMES); i++) {
+        GString * s = g_string_new( <class_lexer()>__SYMBOLIC_NAMES[i] );
+        g_array_append_val(array, s);
+    }
+
+    return array;
+}
+
+static GArray*
+<class_lexer()>_literal_names_to_array () {
+    GArray *array = g_array_new(FALSE, FALSE, sizeof(GString*));
+
+    int i;
+    for (i=0; i\<G_N_ELEMENTS(<class_lexer()>__LITERAL_NAMES); i++) {
+        GString * s = g_string_new( <class_lexer()>__LITERAL_NAMES[i] );
+        g_array_append_val(array, s);
+    }
+
+    return array;
+}
+
+
+<"/* virtual AntlrRecognizer */" >
+
+static AntlrVocabulary *<class_lexer()>_vocabulary = NULL;
+
+static AntlrVocabulary*
+<class_lexer()>_get_vocabulary(<ClassLexer()> *lexer)
+{
+    if (!<class_lexer()>_vocabulary) {
+        <class_lexer()>_vocabulary = antlr_vocabulary_new(<class_lexer()>_literal_names_to_array (), <class_lexer()>_symbolic_names_to_array (), NULL);
+    }
+    return <class_lexer()>_vocabulary;
+}
+
+static GArray* <class_lexer()>_token_names = NULL;
+
+static GArray*
+<class_lexer()>_class_recognizer_get_token_names(AntlrRecognizer *recognizer)
+{
+    if (!<class_lexer()>_token_names) {
+        AntlrVocabulary *vocabulary = <class_lexer()>_get_vocabulary(<CLASS_LEXER()>(recognizer));
+        AntlrIVocabulary *ivocabulary = ANTLR_IVOCABULARY(vocabulary);
+        gint length = G_N_ELEMENTS(<class_lexer()>__SYMBOLIC_NAMES);
+        <class_lexer()>_token_names = g_array_sized_new(FALSE, FALSE, sizeof(GString*), length);
+        gint i;
+        for (i=0; i\<length; i++) {
+            gchar *str = antlr_ivocabulary_get_literal_name(ivocabulary, i);
+            if (str == NULL) {
+                str = antlr_ivocabulary_get_symbolic_name(ivocabulary, i);
+            }
+
+            if (str == NULL) {
+                str = g_strdup("\<INVALID>");
+            }
+            GString *s = g_string_new(str);
+            g_array_append_val(<class_lexer()>_token_names, s);
+        }
+    }
+    return <class_lexer()>_token_names;
+}
+
+
+static void
+<class_lexer()>_g_string_free(gpointer *object) {
+    GString *str = *object;
+    if(str)
+        g_string_free(str, TRUE);
+}
+
+void
+<class_lexer()>_token_names_free()
+{
+    if (<class_lexer()>_token_names) {
+        g_array_set_clear_func(<class_lexer()>_token_names, (GDestroyNotify)<class_lexer()>_g_string_free);
+        g_array_free(<class_lexer()>_token_names, TRUE);
+    }
+    <class_lexer()>_token_names = NULL;
+}
+
+static GArray* <class_lexer()>_rule_names = NULL;
+
+static GArray*
+<class_lexer()>_class_recognizer_get_rule_names(AntlrRecognizer *recognizer)
+{
+    if (!<class_lexer()>_rule_names) {
+        gint capacity = G_N_ELEMENTS(<class_lexer()>__RULE_NAMES);
+        GArray *<class_lexer()>_rule_names = g_array_sized_new(FALSE, FALSE, sizeof(GString*), capacity);
+        gint i;
+        for (i=0; i\<capacity; i++) {
+            GString *s = g_string_new(<class_lexer()>__RULE_NAMES[i]);
+            g_array_append_val(<class_lexer()>_rule_names, s);
+        }
+    }
+    return <class_lexer()>_rule_names;
+}
+
+<"/* virtual GObject */" >
+
+static void <class_lexer()>_class_init(<ClassLexer()>Class *klass);
+static void <class_lexer()>_init(<ClassLexer()> *gobject);
+
+G_DEFINE_TYPE (<ClassLexer()>, <class_lexer()>, <ANTLR_TYPE_LEXER(superClass)>)
+
+
+<if (actionFuncs)>
+static void <class_lexer()>_action(AntlrRecognizer* self, AntlrRuleContext *context, gint ruleIndex, gint actionIndex) {
+  switch (ruleIndex) {
+    <lexer.actionFuncs.values: {f | case <f.ruleIndex>: <class_lexer()>_action_<f.name; format="lower">(<CLASS_LEXER()>(self), context, actionIndex); break;}; separator="\n">
+
+  default:
+    break;
+  }
+}
+<endif>
+
+<if (sempredFuncs)>
+gboolean <class_lexer()>_sempred(<ClassLexer()>* self, AntlrRuleContext *context, gint ruleIndex, gint predicateIndex) {
+  switch (ruleIndex) {
+    <lexer.sempredFuncs.values: {f | case <f.ruleIndex>: return <class_lexer()>_sempred_<f.name; format="lower">(self, context, predicateIndex);}; separator="\n">
+
+  default:
+    break;
+  }
+  return TRUE;
+}
+<endif>
+
+static void
+<class_lexer()>_class_init(<ClassLexer()>Class *klass)
+{
+        ANTLR_RECOGNIZER_CLASS(klass)->get_rule_names = <class_lexer()>_class_recognizer_get_rule_names;
+        ANTLR_RECOGNIZER_CLASS(klass)->get_token_names = <class_lexer()>_class_recognizer_get_token_names;
+<if (actionFuncs)>
+        ANTLR_RECOGNIZER_CLASS(klass)->action = <class_lexer()>_action;
+<endif>
+
+}
+
+static void
+<class_lexer()>_init (<ClassLexer()> *object)
+{
+}
+
+<ClassLexer()>*
+<class_lexer()>_new (void)
+{
+        return g_object_new (<class_lexer()>_get_type (),
+                             NULL);
+}
+
+<ClassLexer()>*
+<class_lexer()>_new_with_char_stream (AntlrCharStream *char_stream)
+{
+    AntlrLexer *antlr_lexer = antlr_lexer_super_with_char_stream(<TYPE_LEXER()>, char_stream);
+    <ClassLexer()> *lexer = <CLASS_LEXER()>(antlr_lexer);
+
+    ANTLR_LEXER(lexer)->input = char_stream;
+
+    //_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+    ANTLR_RECOGNIZER(lexer)->interp = (AntlrATNInterpreter*)
+            antlr_lexer_atn_simulator_new_from_lexer(
+                ANTLR_LEXER(lexer),
+                <class_lexer()>_get_atn(),
+                <class_lexer()>_get_decision_to_dfa(lexer),
+                <class_lexer()>_get_shared_context_cache()
+             );
+
+    return lexer;
+}
+
+
+
+
+
+<namedActions.definitions>
+
+
+<actionFuncs.values; separator="\n">
+
+<sempredFuncs.values; separator="\n">
+
+
+>>
+
+RuleActionFunctionHeader(r, actions) ::= <<
+void <class_lexer()>_action_<r.name; format="lower">(<ClassLexer()>* self, AntlrRuleContext *context, gint actionIndex);
+>>
+
+RuleActionFunction(r, actions) ::= <<
+void <class_lexer()>_action_<r.name; format="lower">(<ClassLexer()>* self, AntlrRuleContext *context, gint actionIndex) {
+  switch (actionIndex) {
+    <actions: {index | case <index>: <actions.(index)> break;}; separator="\n">
+
+  default:
+    break;
+  }
+}
+
+>>
+
+RuleSempredFunctionHeader(r, actions) ::= <<
+gboolean <class_recognizer()>_sempred_<r.name; format="lower">(<ClassRecognizer()>* self, AntlrRuleContext *local_context, size_t predicateIndex);
+>>
+
+RuleSempredFunction(r, actions) ::= <<
+<! Called for both lexer and parser. But only one of them is actually available. Testing for the parser directly
+   generates a warning, however. So do the check via the factory instead. !>
+gboolean <class_recognizer()>_sempred_<r.name; format="lower">(<ClassRecognizer()>* self, AntlrRuleContext *local_context, size_t predicateIndex) {
+  switch (predicateIndex) {
+    <actions: {index | case <index>: return <actions.(index)>}; separator=";\n">;
+
+  default:
+    break;
+  }
+  return TRUE;
+}
+
+>>
+
+//--------------------------------------------------------------------------------------------------
+
+ParserHeader(parser, funcs, atn, sempredFuncs, superClass = {AntlrParser}) ::= <<
+<namedActions.context>
+
+
+#ifndef __<CLASS_PARSER()>_H__
+#define __<CLASS_PARSER()>_H__
+
+#include <"<glib-object.h>" >
+
+G_BEGIN_DECLS
+
+#define <CLASS_PARSER()>_EOF ANTLR_TOKEN_EOF
+
+<if (parser.tokens)>
+typedef enum _<ClassParser()>Tokens  <ClassParser()>Tokens;
+<endif>
+<if (parser.rules)>
+typedef enum _<ClassParser()>Rules   <ClassParser()>Rules;
+<endif>
+
+<if (parser.tokens)>
+enum _<ClassParser()>Tokens {
+  <parser.tokens: {k | <PARSER_TOKEN_ENUM(k)> = <parser.tokens.(k)>}; separator=", ", wrap, anchor>
+};
+<endif>
+
+<if (parser.rules)>
+enum _<ClassParser()>Rules {
+    <parser.rules: {r | <PARSER_RULE_ENUM(r.name)> = <r.index>}; separator=", ", wrap, anchor>
+};
+<endif>
+
+
+#define <TYPE_PARSER()>            (<class_parser()>_get_type())
+#define <CLASS_PARSER()>(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), <TYPE_PARSER()>, <ClassParser()>))
+#define <CLASS_PARSER()>_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  <TYPE_PARSER()>, <ClassParser()>Class))
+#define <NS_MACRO()>IS_<PARSER_MACRO()>(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), <TYPE_PARSER()>))
+#define <NS_MACRO()>IS_<PARSER_MACRO()>_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  <TYPE_PARSER()>))
+#define <CLASS_PARSER()>_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  <TYPE_PARSER()>, <ClassParser()>Class))
+
+typedef struct _<ClassParser()>      <ClassParser()>;
+typedef struct _<ClassParser()>Class <ClassParser()>Class;
+
+struct _<ClassParser()> {
+    <"/*< private >*/">
+    <superClass> parent_instance;
+
+    GArray *rule_names;
+
+    <"/*< public >*/">
+    <namedActions.members>
+};
+
+struct _<ClassParser()>Class {
+    /*\< private >*/
+    <superClass>Class parent_class;
+};
+
+GType <class_parser()>_get_type(void) G_GNUC_CONST;
+<ClassParser()> *<class_parser()>_new();
+<ClassParser()> *<class_parser()>_new_with_token_stream (AntlrTokenStream *input);
+
+void <class_parser()>_atn_free ();
+void <class_parser()>_decision_to_dfa_free ();
+void <class_parser()>_token_names_free();
+
+
+<! Forward declare context types !>
+<parser.funcs: {f | typedef struct _<ClassContext(f.name)> <ClassContext(f.name)>; };  separator = "\n">
+
+<funcs; separator = "\n">
+
+<if (sempredFuncs)>
+gboolean <class_parser()>_sempred(<ClassParser()> *self, AntlrRuleContext *local_context, size_t ruleIndex, size_t predicateIndex);
+<sempredFuncs.values; separator = "\n">
+<endif>
+
+<namedActions.declarations>
+
+
+G_END_DECLS
+
+#endif /* __<CLASS_PARSER()>_H__ */
+
+>>
+
+Parser(parser, funcs, atn, sempredFuncs, superClass = {AntlrParser}) ::= <<
+
+
+#include <"<glib-object.h>" >
+#include <"<stdlib.h>" > // atoi
+
+#include "antlr-runtime/types.h"
+
+#include "antlr-runtime/misc/object.h"
+#include "antlr-runtime/vocabulary.h"
+#include "antlr-runtime/vocabulary-impl.h"
+#include "antlr-runtime/misc/int-iset.h"
+#include "antlr-runtime/misc/interval.h"
+#include "antlr-runtime/misc/interval-set.h"
+#include "antlr-runtime/misc/bit-set.h"
+#include "antlr-runtime/misc/double-key-map.h"
+#include "antlr-runtime/atn/transition.h"
+#include "antlr-runtime/atn/lexer-action.h"
+#include "antlr-runtime/atn/atn-state.h"
+#include "antlr-runtime/atn/rule-stop-state.h"
+#include "antlr-runtime/atn/rule-start-state.h"
+#include "antlr-runtime/atn/atn.h"
+#include "antlr-runtime/atn/prediction-context.h"
+#include "antlr-runtime/atn/prediction-context-cache.h"
+#include "antlr-runtime/atn/semantic-context.h"
+#include "antlr-runtime/atn/config.h"
+#include "antlr-runtime/atn/config-set.h"
+#include "antlr-runtime/dfa/dfa-state.h"
+#include "antlr-runtime/dfa/dfa.h"
+#include "antlr-runtime/atn/prediction-mode.h"
+#include "antlr-runtime/atn/atn-simulator.h"
+#include "antlr-runtime/atn/parser-atn-simulator.h"
+
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+#include "antlr-runtime/rule-node.h"
+#include "antlr-runtime/rule-context.h"
+#include "antlr-runtime/parser-rule-context.h"
+#include "antlr-runtime/recognizer.h"
+#include "antlr-runtime/parser.h"
+
+#include "antlr-runtime/misc/integer-list.h"
+#include "antlr-runtime/misc/integer-stack.h"
+#include "antlr-runtime/recognizer.h"
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/token-factory.h"
+#include "antlr-runtime/lexer.h"
+
+#include "antlr-runtime/rule-context.h"
+#include "antlr-runtime/tree/tree.h"
+#include "antlr-runtime/tree/syntax-tree.h"
+#include "antlr-runtime/tree/parse-tree.h"
+#include "antlr-runtime/tree/error-node.h"
+#include "antlr-runtime/tree/terminal-node.h"
+#include "antlr-runtime/tree/parse-tree-listener.h"
+
+#include "antlr-runtime/token-stream.h"
+#include "antlr-runtime/buffered-token-stream.h"
+#include "antlr-runtime/common-token-stream.h"
+#include "antlr-runtime/atn/atn-deserialization-options.h"
+#include "antlr-runtime/atn/atn-deserializer.h"
+
+#include "antlr-runtime/dfa/dfa.h"
+#include "antlr-runtime/atn/decision-state.h"
+
+#include "antlr-runtime/error-strategy.h"
+#include "antlr-runtime/int-stream.h"
+#include "antlr-runtime/token-stream.h"
+#include "antlr-runtime/token.h"
+
+#include "antlr-runtime/parser-rule-context.h"
+
+#include "<file.grammarName>Lexer.h"
+
+#include "<file.parser.name>.h"
+
+#include "<file.grammarName>Listener.h"
+
+
+static AntlrATN *<class_parser()>_atn = NULL;// AntlrATN * || GArray *
+static GArray   *<class_parser()>_decision_to_dfa = NULL;// of AntlrDFA*
+static AntlrPredictionContextCache *<class_parser()>_shared_context_cache = NULL;
+static AntlrPredictionContextCache*
+<class_parser()>_get_shared_context_cache ()
+{
+    if (!<class_parser()>_shared_context_cache) {
+        <class_parser()>_shared_context_cache = antlr_prediction_context_cache_new();
+    }
+    return <class_parser()>_shared_context_cache;
+}
+
+<! only one segment, can be inlined !>
+static guint <class_parser()>_serialized_atn[] = {
+  <atn>
+};
+
+static AntlrATN*
+<class_parser()>_get_atn ()
+{
+    if (!<class_parser()>_atn) {
+        AntlrATNDeserializer *deserializer = antlr_atn_deserializer_new_full(NULL);
+        <class_parser()>_atn = antlr_atn_deserializer_deserialize(deserializer, <class_parser()>_serialized_atn, G_N_ELEMENTS(<class_parser()>_serialized_atn));
+        g_object_unref(deserializer);
+    }
+    return <class_parser()>_atn;
+}
+
+///
+void
+<class_parser()>_atn_free ()
+{
+    if (<class_parser()>_atn!=NULL) {
+        g_clear_object(&<class_parser()>_atn);
+    }
+}
+
+
+static void
+my_pointer_object_unref(GObject **object)
+{
+    g_object_unref(*object);
+}
+
+void
+<class_parser()>_decision_to_dfa_free ()
+{
+    if (<class_parser()>_decision_to_dfa!=NULL) {
+        g_array_set_clear_func(<class_parser()>_decision_to_dfa, (GDestroyNotify)my_pointer_object_unref);
+        g_array_free(<class_parser()>_decision_to_dfa, TRUE);
+    }
+    <class_parser()>_decision_to_dfa=NULL;
+}
+
+///
+static GArray*
+<class_parser()>_get_decision_to_dfa (<ClassRecognizer()> *lexer)
+{
+    if (!<class_parser()>_decision_to_dfa) {
+        AntlrATN *atn = <class_parser()>_get_atn();
+        gint size = antlr_atn_get_number_of_decisions(atn);
+        <class_parser()>_decision_to_dfa = g_array_sized_new(FALSE, FALSE, sizeof(AntlrDFA *), size);
+        int i;
+        for (i = 0; i \< size; i++) {
+            AntlrDFA *v = antlr_dfa_new_with_decision_state_and_decision(antlr_atn_get_decision_state(atn, i), i);
+            g_array_insert_val(<class_parser()>_decision_to_dfa, i, v);
+        }
+    }
+    return <class_parser()>_decision_to_dfa;
+}
+
+
+static gchar* <class_parser()>__RULE_NAMES[] = {
+  <parser.ruleNames: {r | "<r>"}; separator = ", ", wrap, anchor>
+};
+static gchar* <class_parser()>__LITERAL_NAMES[] = {
+  <parser.literalNames: {t | <t>}; null = "\"\"", separator = ", ", wrap, anchor>
+};
+static gchar* <class_parser()>__SYMBOLIC_NAMES[] = {
+  <parser.symbolicNames: {t | <t>}; null = "\"\"", separator = ", ", wrap, anchor>
+};
+
+static GArray*
+<class_parser()>_symbolic_names_to_array () {
+    GArray *array = g_array_new(FALSE, FALSE, sizeof(GString*));
+    // TODO sized_new
+
+    int i;
+    for (i=0; i\<G_N_ELEMENTS(<class_parser()>__SYMBOLIC_NAMES); i++) {
+        GString * s = g_string_new( <class_parser()>__SYMBOLIC_NAMES[i] );
+        g_array_append_val(array, s);
+    }
+
+    return array;
+}
+
+static GArray*
+<class_parser()>_literal_names_to_array () {
+    GArray *array = g_array_new(FALSE, FALSE, sizeof(GString*));
+    // TODO sized_new
+
+    int i;
+    for (i=0; i\<G_N_ELEMENTS(<class_parser()>__LITERAL_NAMES); i++) {
+        GString * s = g_string_new( <class_parser()>__LITERAL_NAMES[i] );
+        g_array_append_val(array, s);
+    }
+
+    return array;
+}
+
+static GArray*
+<class_parser()>_rule_names_to_array () {
+    GArray *array = g_array_sized_new(FALSE, FALSE, sizeof(GString*), G_N_ELEMENTS(<class_parser()>__RULE_NAMES));
+
+    int i;
+    for (i=0; i\<G_N_ELEMENTS(<class_parser()>__RULE_NAMES); i++) {
+        GString * s = g_string_new( <class_parser()>__RULE_NAMES[i] );
+        g_array_append_val(array, s);
+    }
+
+    return array;
+}
+
+
+static AntlrVocabulary *<class_parser()>_vocabulary = NULL;
+
+static AntlrVocabulary*
+<class_parser()>_get_vocabulary(<ClassParser()> *parser)
+{
+    if (!<class_parser()>_vocabulary) {
+        <class_parser()>_vocabulary = antlr_vocabulary_new(<class_parser()>_literal_names_to_array(), <class_parser()>_symbolic_names_to_array(), NULL);
+    }
+    return <class_parser()>_vocabulary;
+}
+
+static GArray* <class_parser()>_token_names = NULL;
+
+static GArray*
+<class_parser()>_get_token_names(AntlrRecognizer *recognizer)
+{
+    <ClassParser()> *parser = <CLASS_PARSER()>(recognizer);
+
+    if (!<class_parser()>_token_names) {
+        AntlrVocabulary *vocabulary = <class_parser()>_get_vocabulary(parser);
+        AntlrIVocabulary *i_vocabulary = ANTLR_IVOCABULARY(vocabulary);
+
+        gint length = G_N_ELEMENTS(<class_parser()>__SYMBOLIC_NAMES);
+        <class_parser()>_token_names = g_array_sized_new(FALSE, FALSE, sizeof(GString*), length);
+        gint i;
+        for (i=0; i\<length; i++) {
+            gchar *token_name = antlr_ivocabulary_get_literal_name(i_vocabulary, i);
+            if (token_name == NULL) {
+                token_name = antlr_ivocabulary_get_symbolic_name(i_vocabulary, i);
+            } else if (token_name[0] == '\0') {
+                g_free(token_name);
+                token_name = antlr_ivocabulary_get_symbolic_name(i_vocabulary, i);
+            }
+
+            if (token_name == NULL) {
+                token_name = g_strdup("\<INVALID>");
+            } else if (token_name[0] == '\0') {
+                g_free(token_name);
+                token_name = g_strdup("\<INVALID>");
+            }
+
+
+            GString *v = g_string_new(token_name);
+            g_free(token_name);
+            g_array_append_val(<class_parser()>_token_names, v);
+        }
+    }
+
+    return <class_parser()>_token_names;
+}
+
+static void
+<class_parser()>_g_string_free(gpointer *object) {
+    GString *str = *object;
+    if(str)
+        g_string_free(str, TRUE);
+}
+
+void
+<class_parser()>_token_names_free()
+{
+    if (<class_parser()>_token_names) {
+        g_array_set_clear_func(<class_parser()>_token_names, (GDestroyNotify)<class_parser()>_g_string_free);
+        g_array_free(<class_parser()>_token_names, TRUE);
+    }
+    <class_parser()>_token_names = NULL;
+}
+
+static GArray*
+<class_parser()>_get_rule_names(AntlrRecognizer *recognizer)
+{
+    <ClassParser()> *parser = <CLASS_PARSER()>(recognizer);
+    if (parser->rule_names==NULL) {
+        parser->rule_names = <class_parser()>_rule_names_to_array();
+    }
+    return parser->rule_names;
+}
+
+G_DEFINE_TYPE (<ClassParser()>, <class_parser()>, <ANTLR_TYPE_PARSER(superClass)>)
+
+
+static void
+<class_parser()>_init (<ClassParser()> *parser)
+{
+    parser->rule_names = NULL;
+
+}
+
+static void
+<class_parser()>_class_init (<ClassParser()>Class *klass)
+{
+    GObjectClass* object_class = G_OBJECT_CLASS (klass);
+    AntlrRecognizerClass* recognizer_class = ANTLR_RECOGNIZER_CLASS (klass);
+
+    //g_type_class_add_private (klass, sizeof (SqlParserRules));
+
+    //object_class->finalize = sql_parser_finalize;
+    //parser_class->enter_rule
+
+    recognizer_class->get_token_names = <class_parser()>_get_token_names;
+    recognizer_class->get_rule_names  = <class_parser()>_get_rule_names;
+    recognizer_class->get_atn         = <class_parser()>_get_atn;
+
+    // build token_names
+}
+
+
+<ClassParser()>*
+<class_parser()>_new_with_token_stream (AntlrTokenStream *input)
+{
+    <ClassParser()> *parser;
+    parser = g_object_new(<TYPE_PARSER()>, NULL);
+    //AntlrATN *atn = <class_parser()>_get_atn(ANTLR_RECOGNIZER(parser));
+
+    ANTLR_PARSER(parser)->input = input;
+    ANTLR_RECOGNIZER(parser)->interp = (AntlrATNInterpreter*)antlr_parser_atn_simulator_new_full(
+                ANTLR_PARSER(parser),
+                <class_parser()>_get_atn(/*ANTLR_RECOGNIZER(parser)*/),
+                <class_parser()>_get_decision_to_dfa(parser),
+                NULL//<class_parser()>_get_shared_context_cache()
+    );
+    return parser;
+}
+
+
+<namedActions.definitions>
+
+<funcs; separator = "\n\n">
+
+<if (sempredFuncs)>
+gboolean <class_parser()>_sempred(<ClassParser()> *self, AntlrRuleContext *context, size_t ruleIndex, size_t predicateIndex) {
+  switch (ruleIndex) {
+  <parser.sempredFuncs.values: {f |
+  case <f.ruleIndex>: return <class_parser()>_sempred_<f.name>(self, context, predicateIndex);}; separator="\n">
+
+  default:
+    break;
+  }
+  return TRUE;
+}
+
+<sempredFuncs.values; separator="\n"><endif>
+
+>>
+
+SerializedATNHeader(model) ::= <<
+static atn::ATN _atn;
+static std::vector\<uint16_t> _serializedATN;
+>>
+
+// Constructs the serialized ATN and writes init code for static member vars.
+SerializedATN(model) ::= <<
+<model.serialized; separator=", ">
+>>
+
+RuleFunctionHeader(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble, exceptions) ::= <<
+<ruleCtx>
+<! TODO: untested !>
+<if (altLabelCtxs)><altLabelCtxs: {l | <altLabelCtxs.(l)>}; separator="\n"><endif>
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name; format="toSnack">(<ClassParser()>* self<args: {a | , <a>}>, GError **error);
+>>
+
+RuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble, exceptions) ::= <<
+<ruleCtx>
+<! TODO: untested !><altLabelCtxs: {l | <altLabelCtxs.(l)>}; separator = "\n">
+
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name; format="toSnack">(<ClassParser()>* self<args: {a | , <a>}>, GError **error) {
+    g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+    AntlrRuleContext *ret = NULL;
+
+    AntlrParserRuleContext *ctx = ANTLR_PARSER(self)->ctx;
+    gint state = antlr_recognizer_get_state(ANTLR_RECOGNIZER(self));
+    <if (currentRule.args)>
+    <ClassContext(currentRule.ctxType)> *local_context = <class_context(currentRule.ctxType)>_new_full(ctx, state<currentRule.args:{a | , <a.name>}>);
+    <else>
+    <ClassContext(currentRule.ctxType)> *local_context = <class_context(currentRule.ctxType)>_new(ctx, state);
+    <endif>
+
+    antlr_parser_enter_rule(ANTLR_PARSER(self), ANTLR_PARSER_RULE_CONTEXT(local_context), 0, <PARSER_RULE_ENUM(currentRule.name)>);
+    <namedActions.init>
+    <locals; separator = "\n">
+
+<if (currentRule.hasLookaheadBlock)>
+    size_t alt;<! TODO: untested !>
+<endif>
+    <code>
+    <postamble; separator = "\n"><! TODO: untested !>
+    <namedActions.after>
+
+    antlr_parser_exit_rule(ANTLR_PARSER(self));
+
+    return local_context;
+}
+
+>>
+
+LeftRecursiveRuleFunctionHeader(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble) ::= <<
+<ruleCtx>
+<! TODO: untested !><altLabelCtxs: {l | <altLabelCtxs.(l)>}; separator="\n">
+
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name; format="toSnack">(<ClassParser()>* self<currentRule.args: {a | , <a>}>, GError **error);
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name; format="toSnack">_with_precedence(<ClassParser()>* self, gint precedence<currentRule.args: {a | , <a>}>, GError **error);
+
+>>
+
+LeftRecursiveRuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble) ::= <<
+<ruleCtx>
+<altLabelCtxs: {l | <altLabelCtxs.(l)>}; separator="\n">
+
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name>(<ClassParser()> *self<currentRule.args:{a | , <a>}>, GError **error) {
+<! TODO: currentRule.args untested !>   return <class_parser()>_parse_<currentRule.name>_with_precedence(self, 0<currentRule.args: {a | , <a.name>}>, error);
+}
+
+<ClassContext(currentRule.ctxType)>* <class_parser()>_parse_<currentRule.name>_with_precedence(<ClassParser()> *self, int precedence<currentRule.args:{a | , <a>}>, GError **error) {
+  AntlrRuleContext *ret = NULL;
+  AntlrParserRuleContext *parentContext = ANTLR_PARSER(self)->ctx;
+  gint parentState = antlr_recognizer_get_state(ANTLR_RECOGNIZER(self));
+
+  <ClassContext(currentRule.ctxType)> *local_context = (<ClassContext(currentRule.ctxType)> *)antlr_parser_rule_context_super_with_parent(<TYPE_CONTEXT(currentRule.ctxType)>, ANTLR_PARSER(self)->ctx, parentState<currentRule.args: {a | , <a.name>}>);
+  <ClassContext(currentRule.ctxType)> *previousContext = local_context;
+  size_t startState = <currentRule.startState>;
+  antlr_parser_enter_recursion_rule(ANTLR_PARSER(self), ANTLR_PARSER_RULE_CONTEXT(local_context), <currentRule.startState>, <PARSER_RULE_ENUM(currentRule.name)>, precedence);
+
+  <namedActions.init>
+  <locals; separator = "\n"><! TODO: untested !>
+
+//  auto onExit = finally([=] {
+//  <if (finallyAction)><finallyAction><endif>
+//    unrollRecursionContexts(parentContext);
+//  });
+///  try {
+    <if (currentRule.hasLookaheadBlock)>size_t alt;<endif>
+    <code>
+<! TODO: untested !><postamble; separator = "\n">
+    <namedActions.after>
+///  }
+///  catch (RecognitionException &e) {
+///    _errHandler->reportError(this, e);
+///    _localctx->exception = std::current_exception();
+///    _errHandler->recover(this, _localctx->exception);
+///  }
+  antlr_parser_unroll_recursion_contexts(ANTLR_PARSER(self), parentContext);
+  return local_context;
+}
+>>
+
+StructDeclHeader(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers) ::= <<
+//----------------- <struct.name> ------------------------------------------------------------------
+
+#define <TYPE_CONTEXT(struct.name)>            (<class_context(struct.name)>_get_type())
+#define <CLASS_CONTEXT(struct.name)>(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>))
+#define <CLASS_CONTEXT(struct.name)>_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>Class))
+#define <IS_CONTEXT(struct.name)>(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), <TYPE_CONTEXT(struct.name)>))
+#define <IS_CONTEXT(struct.name)>_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  <TYPE_CONTEXT(struct.name)>))
+#define <CLASS_CONTEXT(struct.name)>_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>Class))
+
+
+//typedef struct _<ClassContext(struct.name)>      <ClassContext(struct.name)>;
+typedef struct _<ClassContext(struct.name)>Class <ClassContext(struct.name)>Class;
+
+struct _<ClassContext(struct.name)> {
+    /*\< private >*/
+    <if (contextSuperClass)><contextSuperClass><else>AntlrParserRuleContext<endif> parent_instance;
+
+    /*\< public >*/
+    <attrs:{a | <a>;}; separator="\n">
+};
+
+struct _<ClassContext(struct.name)>Class {
+    /*\< private >*/
+    <if (contextSuperClass)><contextSuperClass><else>AntlrParserRuleContext<endif>Class parent_class;
+};
+
+GType <class_context(struct.name)>_get_type(void) G_GNUC_CONST;
+<ClassContext(struct.name)> *<class_context(struct.name)>_new(AntlrParserRuleContext *parent, size_t invokingState);
+
+<getters: {g | <g>}; separator = "\n">
+
+<! dispatchMethods; separator = "\n" !>
+<extensionMembers; separator = "\n"><! TODO: untested !>
+
+>>
+
+StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers) ::= <<
+//----------------- <struct.name> ------------------------------------------------------------------
+
+/* virtual AntlrRuleContext */
+gint <class_context(struct.name)>_class_rule_context_get_rule_index(AntlrRuleContext *self) {
+  return <PARSER_RULE_ENUM(struct.derivedFromName)>;
+}
+
+/* virtual AntlrParserRuleContext */
+<dispatchMethods; separator = "\n\n">
+
+/* virtual GObject */
+static void <class_context(struct.name)>_class_init(<ClassContext(struct.name)>Class *klass);
+static void <class_context(struct.name)>_init(<ClassContext(struct.name)> *gobject);
+
+G_DEFINE_TYPE (<ClassContext(struct.name)>, <class_context(struct.name)>, ANTLR_TYPE_PARSER_RULE_CONTEXT)
+
+static void
+<class_context(struct.name)>_class_init(<ClassContext(struct.name)>Class *klass)
+{
+    AntlrParserRuleContextClass *parserrulecontext_class;
+    AntlrRuleContextClass *rulecontext_class;
+
+    rulecontext_class = (AntlrRuleContextClass *) klass;
+    parserrulecontext_class = (AntlrParserRuleContextClass *) klass;
+
+//    parserrulecontext_class->enter_rule = <class_context(struct.name)>_class_parser_rule_context_enter_rule;
+//    parserrulecontext_class->exit_rule = <class_context(struct.name)>_class_parser_rule_context_exit_rule;
+
+    rulecontext_class->get_rule_index = <class_context(struct.name)>_class_rule_context_get_rule_index;
+}
+
+static void
+<class_context(struct.name)>_init (<ClassContext(struct.name)> *object)
+{
+    <struct.tokenListDecls: {a | object-><a.name> = g_ptr_array_new();}; separator="\n">
+    <struct.tokenDecls: {a | object-><a.name> = NULL;}; separator="\n">
+}
+
+<if (ctorAttrs)>
+<ClassContext(struct.name)> *<class_context(struct.name)>_new_full(AntlrParserRuleContext *parent, size_t invokingState<ctorAttrs: {a | , <a>}>)
+{
+    AntlrParserRuleContext *ctx = antlr_parser_rule_context_super_with_parent(<TYPE_CONTEXT(struct.name)>, parent, state);
+    <ClassContext(struct.name)> *self = <CLASS_CONTEXT(struct.name)>(ctx);
+    <struct.ctorAttrs: {a | self-><a.name> = <a.name>;}; separator="\n">
+    return self;
+}
+<endif>
+
+<ClassContext(struct.name)> *<class_context(struct.name)>_new(AntlrParserRuleContext *parent, size_t invoking_state)
+{
+    AntlrParserRuleContext *ctx = antlr_parser_rule_context_super_with_parent(<TYPE_CONTEXT(struct.name)>, parent, invoking_state);
+    <ClassContext(struct.name)> *self = <CLASS_CONTEXT(struct.name)>(ctx);
+    return self;
+}
+
+<getters: {g | <g>}; separator = "\n">
+
+
+<if (struct.provideCopyFrom)>
+//void <parser.name>::<struct.name>::copyFrom(<struct.name> *ctx) {
+//  <if (contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif>::copyFrom(ctx);
+//  <struct.attrs: {a | this-><a.name> = ctx-><a.name>;}; separator = "\n">
+//}
+
+static void
+<class_context(struct.name)>_copy_from(<ClassContext(struct.name)>*self, <ClassContext(struct.name)> *ctx)
+{
+/*maybe self = parser_rule_context_super_*/
+    antlr_parser_rule_context_copy_from(ANTLR_PARSER_RULE_CONTEXT(self), ANTLR_PARSER_RULE_CONTEXT(ctx));
+}
+<endif>
+
+<! TODO: untested !><extensionMembers; separator = "\n\n">
+
+>>
+
+AltLabelStructDeclHeader(struct, attrs, getters, dispatchMethods) ::= <<
+
+#define <TYPE_CONTEXT(struct.name)>            (<class_context(struct.name)>_get_type())
+#define <CLASS_CONTEXT(struct.name)>(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>))
+#define <CLASS_CONTEXT(struct.name)>_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>Class))
+#define <IS_CONTEXT(struct.name)>(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), <TYPE_CONTEXT(struct.name)>))
+#define <IS_CONTEXT(struct.name)>_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  <TYPE_CONTEXT(struct.name)>))
+#define <CLASS_CONTEXT(struct.name)>_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  <TYPE_CONTEXT(struct.name)>, <ClassContext(struct.name)>Class))
+
+
+typedef struct _<ClassContext(struct.name)>      <ClassContext(struct.name)>;
+typedef struct _<ClassContext(struct.name)>Class <ClassContext(struct.name)>Class;
+
+struct _<ClassContext(struct.name)> {
+    /*\< private >*/
+    <ClassContext(currentRule.name)> parent_instance;
+
+    /*\< public >*/
+    <if (attrs)><attrs: {a | <a>}; separator = "\n"><endif>
+};
+
+struct _<ClassContext(struct.name)>Class {
+    /*\< private >*/
+    <ClassContext(currentRule.name)>Class parent_class;
+};
+
+GType <class_context(struct.name)>_get_type(void) G_GNUC_CONST;
+<ClassContext(struct.name)> *<class_context(struct.name)>_new(<ClassContext(currentRule.name)> *ctx);
+
+<getters: {g | <g>}; separator = "\n">
+
+<! dispatchMethods; separator = "\n" !>
+
+>>
+
+AltLabelStructDecl(struct, attrs, getters, dispatchMethods) ::= <<
+//----------------- <struct.name> ------------------------------------------------------------------
+
+<! TODO: untested !><if (attrs)><attrs: {a | <a>}; separator = "\n"><endif>
+<getters: {g | <g>}; separator = "\n">
+//<parser.name>::<struct.name>::<struct.name>(<currentRule.name; format = "cap">Context *ctx) { copyFrom(ctx); }
+
+static void <class_context(struct.name)>_class_init(<ClassContext(struct.name)>Class *klass);
+static void <class_context(struct.name)>_init(<ClassContext(struct.name)> *gobject);
+
+<dispatchMethods; separator="\n">
+
+G_DEFINE_TYPE (<ClassContext(struct.name)>, <class_context(struct.name)>, <TYPE_CONTEXT(currentRule.name)>)
+
+static void
+<class_context(struct.name)>_class_init(<ClassContext(struct.name)>Class *klass)
+{
+//    AntlrParserRuleContextClass *parserrulecontext_class;
+//    AntlrRuleContextClass *rulecontext_class;
+
+//    rulecontext_class = (AntlrRuleContextClass *) klass;
+//    parserrulecontext_class = (AntlrParserRuleContextClass *) klass;
+
+//    rulecontext_class->get_rule_index = test_context_one_class_rule_context_get_rule_index;
+}
+static void
+<class_context(struct.name)>_init (<ClassContext(struct.name)> *object)
+{
+}
+
+<ClassContext(struct.name)>*
+<class_context(struct.name)>_new(<ClassContext(currentRule.name)> *ctx)
+{
+    <ClassContext(struct.name)>*self = g_object_new(<TYPE_CONTEXT(struct.name)>, NULL);
+    <class_context(currentRule.name)>_copy_from(<CLASS_CONTEXT(currentRule.name)>(self), ctx);
+    return self;
+}
+
+>>
+
+
+CodeBlockForOuterMostAltHeader(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= "<! Required to exist, but unused. !>"
+CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= <<
+<if (currentOuterMostAltCodeBlock.altLabel)>
+local_context = <class_context(currentOuterMostAltCodeBlock.altLabel)>_new(local_context);
+<endif>
+antlr_parser_enter_outer_alt(ANTLR_PARSER(self), ANTLR_PARSER_RULE_CONTEXT(local_context),  <currentOuterMostAltCodeBlock.alt.altNum>);
+<CodeBlockForAlt(currentAltCodeBlock = currentOuterMostAltCodeBlock, ...)>
+>>
+
+CodeBlockForAltHeader(currentAltCodeBlock, locals, preamble, ops) ::= "<! Required to exist, but unused. !>"
+CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
+<! TODO: untested !><locals; separator = "\n">
+<! TODO: untested !><preamble; separator = "\n">
+<ops; separator = "\n">
+>>
+
+LL1AltBlockHeader(choice, preamble, alts, error) ::= "<! Required to exist, but unused. !>"
+LL1AltBlock(choice, preamble, alts, error) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+// TODO: untested LL1AltBlock
+<! TODO: untested !><if (choice.label)>LL1AltBlock(choice, preamble, alts, error) <labelref(choice.label)> = _input->LT(1);<endif>
+<preamble; separator="\n">
+switch (antlr_int_stream_LA(ANTLR_INT_STREAM(ANTLR_PARSER(self)->input), 1)) {
+  <choice.altLook, alts: {look, alt | <cases(ttypes = look)> {
+  <alt>
+  break;
+\}
+}; separator = "\n">
+default:
+  <error>
+}
+>>
+
+LL1OptionalBlockHeader(choice, alts, error) ::= "<! Required but unused. !>"
+LL1OptionalBlock(choice, alts, error) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+switch (antlr_int_stream_LA(ANTLR_INT_STREAM(ANTLR_PARSER(self)->input), 1)) {
+  <choice.altLook, alts: {look, alt | <cases(ttypes = look)> {
+  <alt>// TODO: untested LL1OptionalBlock
+  break;
+\}
+}; separator="\n">
+default:
+  <error>
+}
+>>
+
+LL1OptionalBlockSingleAltHeader(choice, expr, alts, preamble, error, followExpr) ::= "<! Required but unused. !>"
+LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+<preamble; separator = "\n">// TODO: untested LL1OptionalBlockSingleAlt
+if (<expr>) {
+  <alts; separator = "\n">
+}
+>>
+
+LL1StarBlockSingleAltHeader(choice, loopExpr, alts, preamble, iteration) ::= "<! Required but unused. !>"
+LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+<preamble; separator="\n">
+while (<loopExpr>) {
+  <alts; separator="\n">
+  antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.loopBackStateNumber>);
+  antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+  <iteration>
+}
+>>
+
+LL1PlusBlockSingleAltHeader(choice, loopExpr, alts, preamble, iteration) ::= "<! Required but unused. !>"
+LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.blockStartStateNumber>); <! alt block decision !>
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+
+<preamble; separator="\n">
+do {
+  <alts; separator="\n">
+  antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>); <! loopback/exit decision !>
+  antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+  <iteration>
+} while (<loopExpr>);
+
+>>
+
+// LL(*) stuff
+
+AltBlockHeader(choice, preamble, alts, error) ::= "<! Unused but must be present. !>"
+AltBlock(choice, preamble, alts, error) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+<! TODO: untested !><if (choice.label)><labelref(choice.label)> = _input->LT(1);<endif>
+<! TODO: untested !><preamble; separator = "\n">
+AntlrATNInterpreter *interpreter = antlr_recognizer_get_interpreter(ANTLR_RECOGNIZER(self));
+switch (antlr_parser_atn_simulator_adaptive_predict(ANTLR_PARSER_ATN_SIMULATOR(interpreter), ANTLR_PARSER(self)->input, <choice.decision>, ANTLR_PARSER(self)->ctx)) {
+<alts: {alt | case <i>: {
+  <alt>
+  break;
+\}
+}; separator="\n">
+}
+>>
+
+OptionalBlockHeader(choice, alts, error) ::= "<! Unused but must be present. !>"
+OptionalBlock(choice, alts, error) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+
+AntlrATNInterpreter *interpreter = antlr_recognizer_get_interpreter(ANTLR_RECOGNIZER(self));
+switch (antlr_parser_atn_simulator_adaptive_predict(ANTLR_PARSER_ATN_SIMULATOR(interpreter), ANTLR_PARSER(self)->input, <choice.decision>, ANTLR_PARSER(self)->ctx)) {
+<alts: {alt | case <i><if (!choice.ast.greedy)> + 1<endif>: {
+  <alt>
+  break;
+\}
+}; separator = "\n">
+}
+>>
+
+StarBlockHeader(choice, alts, sync, iteration) ::= "<! Unused but must be present. !>"
+StarBlock(choice, alts, sync, iteration) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.stateNumber>);
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+
+AntlrATNInterpreter *interpreter = antlr_recognizer_get_interpreter(ANTLR_RECOGNIZER(self));
+alt = antlr_parser_atn_simulator_adaptive_predict(ANTLR_PARSER_ATN_SIMULATOR(interpreter), ANTLR_PARSER(self)->input, <choice.decision>, ANTLR_PARSER(self)->ctx);
+while (alt != <choice.exitAlt> && alt != ANTLR_ATN_INVALID_ALT_NUMBER) {
+  if (alt == 1<if(!choice.ast.greedy)> + 1<endif>) {
+    <iteration>
+    <alts> <! should only be one !>
+  }
+  antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.loopBackStateNumber>);
+  antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+
+  alt = antlr_parser_atn_simulator_adaptive_predict(ANTLR_PARSER_ATN_SIMULATOR(interpreter), ANTLR_PARSER(self)->input, <choice.decision>, ANTLR_PARSER(self)->ctx);
+}
+>>
+
+PlusBlockHeader(choice, alts, error) ::= "<! Required to exist, but unused. !>"
+PlusBlock(choice, alts, error) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.blockStartStateNumber>);<! alt block decision !>
+antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+alt = 1<if(!choice.ast.greedy)> + 1<endif>;
+do {
+  switch (alt) {
+    <alts: {alt | case <i><if (!choice.ast.greedy)> + 1<endif>: {
+      <alt>
+      break;
+    \}
+}; separator="\n">
+  default:
+    <error>
+  }
+  antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <choice.loopBackStateNumber>);<! loopback/exit decision !>
+  antlr_error_strategy_sync(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+
+  AntlrATNInterpreter *interpreter = antlr_recognizer_get_interpreter(ANTLR_RECOGNIZER(self));
+  alt = antlr_parser_atn_simulator_adaptive_predict(ANTLR_PARSER_ATN_SIMULATOR(interpreter), ANTLR_PARSER(self)->input, <choice.decision>, ANTLR_PARSER(self)->ctx);
+} while (alt != <choice.exitAlt> && alt != ANTLR_ATN_INVALID_ALT_NUMBER);
+>>
+
+Sync(s) ::= "Sync(s) sync(<s.expecting.name>);"
+
+ThrowNoViableAltHeader(t) ::= "<! Unused but must be present. !>"
+ThrowNoViableAlt(t) ::= <<
+if (error!=NULL) {
+    *error = g_error_new(g_quark_from_static_string("ANTLR"), 200, "NoViableAlt for rule '%s' in file '%s'", "<t.enclosingRuleRunction.name>", g_path_get_basename("<t.grammarFile>") );
+}
+return NULL;
+>>
+
+TestSetInlineHeader(s) ::= "<! Required but unused. !>"
+TestSetInline(s) ::= <<
+<s.bitsets: {bits | <if (rest(rest(bits.ttypes)))><bitsetBitfieldComparison(s, bits)><else><bitsetInlineComparison(s, bits)><endif>}; separator=" || ">
+>>
+
+// Java language spec 15.19 - shift operators mask operands rather than overflow to 0... need range test
+testShiftInRange(shiftAmount) ::= <<
+((<shiftAmount> & ~ 0x3fULL) == 0)
+>>
+
+// produces smaller bytecode only when bits.ttypes contains more than two items
+bitsetBitfieldComparison(s, bits) ::= <<
+(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> &&
+  ((1ULL \<\< <offsetShift(s.varName, bits.shift)>) & (<bits.ttypes: {ttype | (1ULL \<\< <offsetShift(ttype, bits.shift, true)>)}; separator = "\n  | ">)) != 0)
+>>
+
+isZero ::= [
+  "0": true,
+  default: false
+]
+
+offsetShift(shiftAmount, offset, prefix = false) ::= <%
+(<if (prefix)><PARSER_RULE_ENUM(shiftAmount)><else><shiftAmount><endif><if (!isZero.(offset))> - <offset><endif>)
+%>
+
+xxxxxxxxoffsetShift(shiftAmount, offset, prefix = false) ::= <%
+<if (!isZero.(offset))>(_1<if (prefix)>_2<parser.name>::<endif>_3<shiftAmount> - <offset>)<else><if (prefix)>_4<parser.name>::<endif>_5<shiftAmount><endif>
+%>
+
+// produces more efficient bytecode when bits.ttypes contains at most two items
+bitsetInlineComparison(s, bits) ::= <%
+<bits.ttypes: {ttype | <s.varName> == <PARSER_RULE_ENUM(ttype)>}; separator = "\n\n|| ">
+%>
+
+cases(ttypes) ::= <<
+<ttypes: {t | case <PARSER_RULE_ENUM(t)>:}; separator="\n">
+>>
+
+InvokeRuleHeader(r, argExprsChunks) ::= "InvokeRuleHeader"
+InvokeRule(r, argExprsChunks) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <r.stateNumber>);
+ret = (AntlrRuleContext*)<class_parser()>_parse_<EXTRACT_CONTEXT_NAME(r.name)><if(r.ast.options.p)>_with_precedence<endif>(self<if(r.ast.options.p)>, <r.ast.options.p><endif><if(argExprsChunks)>, <argExprsChunks><endif>, error);
+<if(r.labels)><r.labels:{l | <labelref(l)> = }> (<ClassContext(r.name)>*)ret;<endif>
+if (ret==NULL || (error && *error)) {
+    return NULL;
+}
+>>
+
+
+
+MatchTokenHeader(m) ::= "<! Required but unused. !>"
+MatchToken(m) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <m.stateNumber>);
+<! TODO: untested !><if (m.labels)><m.labels: {l | <labelref(l)> = }><endif>
+antlr_parser_match(ANTLR_PARSER(self), <PARSER_RULE_ENUM(m.name)>);
+>>
+
+MatchSetHeader(m, expr, capture) ::= "<! Required but unused. !>"
+MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
+
+MatchNotSetHeader(m, expr, capture) ::= "<! Required but unused. !>"
+MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
+
+CommonSetStuff(m, expr, capture, invert) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <m.stateNumber>);
+<if (m.labels)><m.labels: {l | <labelref(l)> = }>antlr_token_stream_LT(ANTLR_TOKEN_STREAM(ANTLR_PARSER(self)->input), 1);<endif>
+<capture>
+if (<if (invert)><m.varName> == 0 || <m.varName> == ANTLR_TOKEN_EOF || <else>!<endif>(<expr>)) {
+  <if (m.labels)><m.labels: {l | <labelref(l)> = }><endif>antlr_error_strategy_recover_inline(ANTLR_PARSER(self)->err_handler, ANTLR_PARSER(self));
+} else {
+  antlr_parser_consume(ANTLR_PARSER(self));
+}
+>>
+
+WildcardHeader(w) ::= "<! Required but unused. !>"
+Wildcard(w) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <w.stateNumber>);
+<if (w.labels)><w.labels: {l | <labelref(l)> = }><endif>antlr_parser_match_wildcard(ANTLR_PARSER(self)); /* TODO */
+>>
+
+// ACTION STUFF
+
+ActionHeader(a, foo, chunks) ::= "<chunks>"
+Action(a, foo, chunks) ::= "<chunks>"
+
+ArgAction(a, chunks) ::= "ArgAction(a, chunks) <chunks>"
+
+SemPredHeader(p, chunks, failChunks) ::= "<! Required but unused. !>"
+SemPred(p, chunks, failChunks) ::= <<
+antlr_recognizer_set_state(ANTLR_RECOGNIZER(self), <p.stateNumber>);
+
+if (!(<chunks>)){
+    if (error!=NULL) {
+        *error = g_error_new(g_quark_from_static_string("ANTLR"), 200, "FailedPredicate: %s", <p.predicate><if (failChunks)>, <failChunks><elseif (p.msg)>, <p.msg><endif>);
+    }
+    return NULL;
+}
+
+>>
+
+ExceptionClauseHeader(e, catchArg, catchAction) ::= "<! Required but unused. !>"
+ExceptionClause(e, catchArg, catchAction) ::= <<
+catch (<catchArg>) {
+  <catchAction>
+}
+>>
+
+// Lexer actions are not associated with model objects.
+
+LexerSkipCommand()  ::= "skip();"
+LexerMoreCommand()  ::= "more();"
+LexerPopModeCommand() ::= "popMode();"
+
+LexerTypeCommand(arg, grammar)      ::= "type = <grammar.name>::<arg>;"
+LexerChannelCommand(arg, grammar)   ::= "channel = <arg>;"
+LexerModeCommand(arg, grammar)      ::= "mode = <grammar.name>Mode::<arg>;"
+LexerPushModeCommand(arg, grammar)  ::= "pushMode(<grammar.name>Mode::<arg>);"
+
+ActionTextHeader(t) ::= "<t.text>"
+ActionText(t) ::= "<t.text>"
+
+ActionTemplateHeader(t) ::= "<! Required but unused. !>"
+ActionTemplate(t) ::= "<t.st>"
+
+ArgRefHeader(t) ::= "<! Required but unused. !>"
+ArgRef(a) ::= "local_context-><a.name>"
+
+LocalRefHeader(t) ::= "<! Required but unused. !>"
+LocalRef(a) ::= "local_context-><a.name>"
+
+RetValueRefHeader(t) ::= "<! Required but unused. !>"
+RetValueRef(a) ::= "local_context-><a.name>"
+
+QRetValueRefHeader(t) ::= "<! Required but unused. !>"
+QRetValueRef(a) ::= "<ctx(a)>-><a.dict>-><a.name>"
+/** How to translate $tokenLabel */
+
+TokenRefHeader(t) ::= "<! Required but unused. !>"
+TokenRef(t) ::= "<ctx(t)>-><t.name>"
+
+LabelRefHeader(t) ::= "<! Required but unused. !>"
+LabelRef(t) ::= "<ctx(t)>-><t.name>"
+
+ListLabelRefHeader(t) ::= "<! Required but unused. !>"
+ListLabelRef(t) ::= "<ctx(t)>-><ListLabelName(t.name)>"
+
+SetAttrHeader(t) ::= "<! Required but unused. !>"
+SetAttr(s,rhsChunks) ::= "<ctx(s)>-><s.name> = <rhsChunks>;"
+
+InputSymbolType() ::= "<file.InputSymbolType; null = {Token}> *"
+
+TokenPropertyRef_textHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_text(t) ::= <<(<ctx(t)>-><t.label> != NULL ? antlr_token_get_text(<ctx(t)>-><t.label>) : g_strdup(""))>>
+
+
+TokenPropertyRef_typeHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_type(t) ::= "(<ctx(t)>-><t.label> != NULL ? antlr_token_get_token_type(<ctx(t)>-><t.label>) : 0)"
+
+TokenPropertyRef_lineHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_line(t) ::= "(<ctx(t)>-><t.label> != NULL ? antlr_token_get_line(<ctx(t)>-><t.label>) : 0)"
+
+TokenPropertyRef_posHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_pos(t) ::= "(<ctx(t)>-><t.label> != NULL ? antlr_token_get_char_position_in_line(<ctx(t)>-><t.label>) : 0)"
+
+TokenPropertyRef_channelHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_channel(t) ::= "(<ctx(t)>-><t.label> != NULL ? antlr_token_get_channel(<ctx(t)>-><t.label>) : 0)"
+
+TokenPropertyRef_indexHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_index(t) ::= "(<ctx(t)>-><t.label> != NULL ? antlr_token_get_token_index(<ctx(t)>-><t.label>) : 0)"
+
+TokenPropertyRef_intHeader(t) ::= "<! Required but unused. !>"
+TokenPropertyRef_int(t) ::= "(<ctx(t)>-><t.label> != NULL ? atoi(antlr_token_get_text(<ctx(t)>-><t.label>)) : 0)"
+
+RulePropertyRef_startHeader(r)  ::= "<! Required but unused. !>"
+RulePropertyRef_start(r) ::= "(<ctx(r)>-><r.label> != NULL ? (ANTLR_PARSER_RULE_CONTEXT(<ctx(r)>-><r.label>)->start)) : NULL)"
+
+RulePropertyRef_stopHeader(r)  ::= "<! Required but unused. !>"
+RulePropertyRef_stop(r)  ::= "(<ctx(r)>-><r.label> != NULL ? (ANTLR_PARSER_RULE_CONTEXT(<ctx(r)>-><r.label>)->stop)) : NULL)"
+
+RulePropertyRef_textHeader(r)  ::= "<! Required but unused. !>"
+RulePropertyRef_text(r)  ::= "(<ctx(r)>-><r.label> != NULL ? antlr_token_stream_get_text_from_token(ANTLR_PARSER(self)->input, ANTLR_PARSER_RULE_CONTEXT(<ctx(r)>-><r.label>)->start, ANTLR_PARSER_RULE_CONTEXT(<ctx(r)>-><r.label>)->stop) : NULL)"
+
+RulePropertyRef_ctxHeader(r)   ::= "<! Required but unused. !>"
+RulePropertyRef_ctx(r)   ::= "<ctx(r)>-><r.label>"
+
+ThisRulePropertyRef_start(r) ::= "ThisRulePropertyRef_start(r) _localctx->start"
+ThisRulePropertyRef_stop(r)  ::= "ThisRulePropertyRef_stop(r) _localctx->stop"
+
+ThisRulePropertyRef_textHeader(r)  ::= "<! Required but unused. !>"
+ThisRulePropertyRef_text(r)  ::= "_input->getText(_localctx->start, _input->LT(-1))"
+
+ThisRulePropertyRef_ctxHeader(r)   ::= "<! Required but unused. !>"
+ThisRulePropertyRef_ctx(r)   ::= "_localctx"
+
+ThisRulePropertyRef_parserHeader(r)	 ::= "<! Required but unused. !>"
+ThisRulePropertyRef_parser(r)	 ::= "this"
+
+NonLocalAttrRef(s) ::= "NonLocalAttrRef(s) ((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name>"
+SetNonLocalAttr(s, rhsChunks) ::=
+  "SetNonLocalAttr(s, rhsChunks) ((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>;"
+
+AddToLabelListHeader(a) ::= "<! Required but unused. !>"
+AddToLabelList(a) ::= <<
+g_ptr_array_add(<ctx(a.label)>-><a.listName>, (gpointer)<labelref(a.label)>);
+>>
+
+TokenLabelType() ::= "<file.TokenLabelType; null = {Token}> *"
+
+TokenDeclHeader(t) ::= "Antlr<TokenLabelType()><t.name>;"
+TokenDecl(t) ::= "<! Variable Declaration !>"
+
+TokenTypeDeclHeader(t) ::= "<! Local Variable !>"
+TokenTypeDecl(t) ::= "size_t <t.name> = 0;"
+
+TokenListDeclHeader(t) ::= "GPtrArray *<t.name>;// of AntlrToken*"
+TokenListDecl(t) ::= "555<! Variable Declaration !>"
+
+RuleContextDeclHeader(r) ::= "<ClassContext(r.ctxName)> *<r.name>"
+RuleContextDecl(r) ::= "<! Variable Declaration !>"
+
+RuleContextListDeclHeader(rdecl) ::= "GPtrArray *<rdecl.name>;// of <ClassContext(rdecl.ctxName)>* "
+RuleContextListDecl(rdecl) ::= "444<! Variable Declaration !> object-><rdecl.name> = g_ptr_array_new();"
+
+ContextTokenGetterDeclHeader(t) ::= "AntlrTerminalNode *<class_context(t.ctx.name)>_token_get_<t.name; format=\"toSnack\">(<ClassContext(t.ctx.name)>* self);"
+ContextTokenGetterDecl(t) ::= <<
+AntlrTerminalNode *<class_context(t.ctx.name)>_token_get_<t.name; format="toSnack">(<ClassContext(t.ctx.name)>* self) {
+    return antlr_parser_rule_context_get_token(ANTLR_PARSER_RULE_CONTEXT(self), <PARSER_RULE_ENUM(t.name)>, 0);
+}
+>>
+
+ContextTokenListGetterDeclHeader(t) ::= "GList* <class_context(t.ctx.name)>_token_get_<t.name; format=\"toSnack\">(<ClassContext(t.ctx.name)>* self);// of AntlrTerminalNode*"
+ContextTokenListGetterDecl(t) ::= <<
+GList* <class_context(t.ctx.name)>_token_get_<t.name; format="toSnack">(<ClassContext(t.ctx.name)>* self) {
+    return antlr_parser_rule_context_get_tokens(ANTLR_PARSER_RULE_CONTEXT(self), <PARSER_RULE_ENUM(t.name)>);
+}
+>>
+
+ContextTokenListIndexedGetterDeclHeader(t) ::= "AntlrTerminalNode *<class_context(t.ctx.name)>_at_token_get_<t.name; format=\"toSnack\">(<ClassContext(t.ctx.name)>* self, size_t i);"
+ContextTokenListIndexedGetterDecl(t)  ::= <<
+AntlrTerminalNode *<class_context(t.ctx.name)>_at_token_get_<t.name; format="toSnack">(<ClassContext(t.ctx.name)>* self, size_t i) {
+    return antlr_parser_rule_context_get_token(ANTLR_PARSER_RULE_CONTEXT(self), <PARSER_RULE_ENUM(t.name)>, i);
+}
+>>
+
+ContextRuleGetterDeclHeader(r) ::= "<ClassContext(r.ctxName)> *<class_context(r.ctx.name)>_rule_get_<r.name; format=\"toSnack\">(<ClassContext(r.ctx.name)>* self);"
+ContextRuleGetterDecl(r) ::= <<
+<! Note: ctxName is the name of the context to return, while ctx is the owning context. !>
+<ClassContext(r.ctxName)> *<class_context(r.ctx.name)>_rule_get_<r.name; format="toSnack">(<ClassContext(r.ctx.name)>* self) {
+    AntlrParserRuleContext *context = antlr_parser_rule_context_get_rule_context(ANTLR_PARSER_RULE_CONTEXT(self), <TYPE_CONTEXT(r.ctxName)>, 0);
+    return <CLASS_CONTEXT(r.ctxName)>(context);
+}
+>>
+
+ContextRuleListGetterDeclHeader(r) ::= "GList* <class_context(r.ctx.name)>_rule_get_<r.name; format=\"toSnack\">(<ClassContext(r.ctx.name)>* self);// of <ClassContext(r.ctxName)>"
+ContextRuleListGetterDecl(r) ::= <<
+GList* <class_context(r.ctx.name)>_rule_get_<r.name; format="toSnack">(<ClassContext(r.ctx.name)>* self) {
+    return antlr_parser_rule_context_get_rule_contexts(ANTLR_PARSER_RULE_CONTEXT(self), <TYPE_CONTEXT(r.ctxName)>);
+}
+>>
+
+ContextRuleListIndexedGetterDeclHeader(r) ::= "<ClassContext(r.ctxName)>* <class_context(r.ctx.name)>_at_rule_get_<r.name; format=\"toSnack\">(<ClassContext(r.ctx.name)>* self, size_t i);"
+ContextRuleListIndexedGetterDecl(r) ::= <<
+<ClassContext(r.ctxName)>* <class_context(r.ctx.name)>_at_rule_get_<r.name; format="toSnack">(<ClassContext(r.ctx.name)>* self, size_t i) {
+    AntlrParserRuleContext *context = antlr_parser_rule_context_get_rule_context(ANTLR_PARSER_RULE_CONTEXT(self), <TYPE_CONTEXT(r.ctxName)>, i);
+    return <CLASS_CONTEXT(r.ctxName)>(context);
+}
+>>
+
+LexerRuleContext() ::= "RuleContext"
+
+// The rule context name is the rule followed by a suffix; e.g. r becomes rContext.
+RuleContextNameSuffix() ::= "Context"
+
+ImplicitTokenLabel(tokenName) ::= <<
+<tokenName; format = "lower">Token
+>>
+
+ImplicitRuleLabel(ruleName) ::= "<ruleName>Context"
+ImplicitSetLabel(id) ::= "_tset<id>"
+ListLabelName(label) ::= "<label>"
+
+CaptureNextToken(d) ::= "CaptureNextToken(d) <d.varName> = _input->LT(1);"
+
+CaptureNextTokenTypeHeader(d) ::= "<! Required but unused. !>"
+CaptureNextTokenType(d) ::= "<d.varName> = antlr_int_stream_LA(ANTLR_INT_STREAM(ANTLR_PARSER(self)->input), 1);"
+
+ListenerDispatchMethodHeader(method) ::= <<
+virtual void <if (method.isEnter)>enter<else>exit<endif>Rule(tree::ParseTreeListener *listener) override;
+>>
+ListenerDispatchMethod(method) ::= <<
+static void <class_context(struct.name)>_class_parser_rule_context_<if (method.isEnter)>enter<else>exit<endif>_rule(AntlrParserRuleContext *self, AntlrParseTreeListener *listener) {
+    <class_listener()>_<if(method.isEnter)>enter<else>exit<endif>_<EXTRACT_CONTEXT_NAME(struct.derivedFromName)>(<CLASS_LISTENER()>(listener), <CLASS_CONTEXT(struct.derivedFromName)>(self));
+}
+>>
+
+VisitorDispatchMethodHeader(method) ::= <<
+
+virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
+>>
+VisitorDispatchMethod(method) ::=  <<
+
+antlrcpp::Any <parser.name>::<struct.name>::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast\<<parser.grammarName>Visitor*>(visitor))
+    return parserVisitor->visit<struct.derivedFromName; format="cap">(this);
+  else
+    return visitor->visitChildren(this);
+}
+>>
+
+AttributeDeclHeaderXXX(d) ::= "<d.type> <d.name><if(d.initValue)> = <d.initValue><endif>"
+AttributeDeclHeader(d) ::= "<d.type> <d.name>"
+AttributeDecl(d) ::= "<d.type> <d.name>"
+
+/** If we don't know location of label def x, use this template */
+labelref(x) ::= "<if (!x.isLocal)><CLASS_CONTEXT(x.ctx.name)>(local_context)-><endif><x.name>"
+
+/** For any action chunk, what is correctly-typed context struct ptr? */
+ctx(actionChunk) ::= "<CLASS_CONTEXT(actionChunk.ctx.name)>(local_context)"
+
+// used for left-recursive rules
+recRuleAltPredicate(ruleName,opPrec) ::= "antlr_recognizer_precpred(ANTLR_RECOGNIZER(self), ANTLR_RULE_CONTEXT(ANTLR_PARSER(self)->ctx), <opPrec>)"
+recRuleSetReturnAction(src,name) ::= "recRuleSetReturnAction(src,name) $<name>=$<src>.<name>;"
+recRuleSetStopToken() ::= "ANTLR_PARSER(self)->ctx->stop = antlr_token_stream_LT(ANTLR_TOKEN_STREAM(ANTLR_PARSER(self)->input), -1);"
+
+
+recRuleAltStartAction(ruleName, ctxName, label) ::= <<
+local_context = (<ClassContext(currentRule.ctxType)> *) antlr_parser_rule_context_super_with_parent(<NS_MACRO()>TYPE_CONTEXT_<ctxName; format="upper">, parentContext, parentState);
+<if (label)>local_context-><label> = previousContext;<endif>
+antlr_parser_push_new_recursion_context(ANTLR_PARSER(self), ANTLR_PARSER_RULE_CONTEXT(local_context), startState, <PARSER_RULE_ENUM(ruleName)>);
+
+>>
+
+// Separate context variable to avoid frequent pointer type casts.
+recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
+auto newContext = _tracker.createInstance\<<currentAltLabel; format = "cap">Context>(_tracker.createInstance\<<ruleName; format="cap">Context>(parentContext, parentState));
+_localctx = newContext;
+<if(label)>
+<if(isListLabel)>
+newContext-><label>.push_back(previousContext);
+<else>
+newContext-><label> = previousContext;
+<endif>
+<endif>
+antlr_parser_push_new_recursion_context(ANTLR_PARSER(self), ANTLR_PARSER_RULE_CONTEXT(newContext), startState, <PARSER_RULE_ENUM(ruleName)>);
+>>
+
+recRuleReplaceContext(ctxName) ::= <<
+local_context = _tracker.createInstance\<<ctxName>Context>(local_context);
+ANTLR_PARSER(self)->ctx = local_context;
+previousContext = local_context;
+>>
+
+recRuleSetPrevCtx() ::= <<
+if (g_list_length(ANTLR_PARSER(self)->parse_listeners))
+  antlr_parser_trigger_exit_rule_event(ANTLR_PARSER(self));
+previousContext = local_context;
+>>
+
+/** Using a type to init value map, try to init a type; if not in table
+ *  must be an object, default value is "null".
+ */
+initValue(typeName) ::= <<
+<cppTypeInitMap.(typeName)>
+>>

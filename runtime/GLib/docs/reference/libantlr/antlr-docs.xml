@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<book id="index">
+
+    <bookinfo>
+      <title>&package_name; Reference Manual</title>
+      <abstract>
+          <para>
+              <application>ANTLR</application> is ANother Tool for Language Recognizer.
+          </para>
+          <para>
+          This document attempts to describe how to use the <application>&package_name;</application> library to integrate <application>ANTLR</application> into your application and how to create your custom <application>ANTLR</application> SuperClass.
+          </para>
+      </abstract>
+      <releaseinfo>
+        For &package_string; API.
+        <para>The latest version of this documentation can be found on-line at
+        <ulink role="online-location" url="http://www.antlr.org/api/GLib/index.html">http://www.antlr.org/api/glib</ulink>.</para>
+      </releaseinfo>
+      <!--authorgroup>
+        <author>
+          <firstname>Gau</firstname>
+          <othername>Louis</othername>
+          <surname>Gaulouis</surname>
+          <email>gaulouis.fr@gmail.com</email>
+        </author>
+      </authorgroup-->
+    </bookinfo>
+
+  <preface>
+    <title>Introduction</title>
+      <para>
+        ANTLR (ANother Tool for Language Recognition) is a powerful parser
+        generator for reading, processing, executing, or translating structured
+        text or binary files. It's widely used to build languages, tools, and
+        frameworks. From a grammar, ANTLR generates a parser that can build
+        parse trees and also generates a listener interface (or visitor) that
+        makes it easy to respond to the recognition of phrases of interest.
+
+        ANTLR is really two things:
+        <itemizedlist>
+          <listitem>
+            <para>
+              A tool that translates your grammar to a parser/lexer.
+            </para>
+            <para>
+              An analyzer generator is a tool that reads an input grammar and
+              converts it into a program that can recognize text and process
+              it according to the rules of that grammar.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              A runtime needed by the generated parsers/lexers.
+            </para>
+          </listitem>
+        </itemizedlist>
+
+        In addition to the analyzer generator, ANTLR provides other related
+        functionality such as tree building, insertion of actions in grammar
+        rules, error handling, and debugging.
+      </para>
+  </preface>
+
+  <part label="I">
+    <title>Getting Started</title>
+    <xi:include href="runtime-build.xml" />
+    <!--chapter>
+      <title>Compiling the ANTLR libraries</title>
+      <xi:include href="runtime-build-linux.xml" />
+      <xi:include href="runtime-build-win.xml" />
+    </chapter-->
+    <xi:include href="application-build.xml" />
+    <xi:include href="application-running.xml" />
+    <!--xi:include href="using-windows.xml" /-->
+    <!--xi:include href="using-mac.xml" /-->
+    <!--xi:include href="getting-help.xml" /-->
+    <!--xi:include href="faq.xml" /-->
+  </part>
+
+  <part label="II">
+    <title>Overview</title>
+    <xi:include href="master-parser.xml" />
+    <xi:include href="master-lexer.xml" />
+    <xi:include href="master-listener.xml" />
+    <xi:include href="master-visitor.xml" />
+    <xi:include href="master-stream.xml" />
+  </part>
+
+<part label="III">
+  <title>Tutorials</title>
+  <xi:include href="getting-started.xml" />
+  <!--xi:include href="calculator.xml" /-->
+</part>
+
+
+<part label="IV">
+  <title>Developper</title>
+  <chapter>
+    <title>Get involve</title>
+
+    <para>
+      The following chapters go into greater detail into how GType and GObject work and
+      how you can use them as a C programmer. It is useful to keep in mind that
+      allowing access to C objects from other interpreted languages was one of the major design
+      goals: this can often explain the sometimes rather convoluted APIs and features present
+      in this library.
+    </para>
+
+<para>
+How to continue developpement of ANTLR library
+</para>
+<para>
+export CXXFLAGS="-g -O0 -Wall"
+export CFLAGS="-g -O0 -Wall"
+./configure
+</para>
+
+<para>
+Release :
+  --enable-debug=no
+</para>
+<para>
+Debug:
+  --enable-gc-friendly
+</para>
+
+    <sect1>
+        <title>Module</title>
+        <para>railroad format</para>
+        <para>Lipsy format</para>
+        <para>LaTeX format</para>
+        <para>SVG format</para>
+        <para>HTML format</para>
+        <para>JSON format</para>
+    </sect1>
+
+    <sect1>
+        <title>Generate documentation</title>
+        ...
+    </sect1>
+
+    <sect1>
+    <title>Create fonctionnal Test Suite</title>
+    ...
+    </sect1>
+
+    <sect1>
+    <title>Create unit Test Suite</title>
+    ...
+    </sect1>
+
+  </chapter>
+
+    <chapter>
+      <title>Binding</title>
+      <sect1>
+          <title>Phyton</title>
+          ...
+      </sect1>
+      <sect1>
+          <title>JavaScript</title>
+          ...
+      </sect1>
+    </chapter>
+
+
+  <chapter>
+    <title>Distribution</title>
+    <sect1>
+    <title>Linux</title>
+    ...
+    </sect1>
+    <sect1>
+    <title>Windows</title>
+    ...
+    </sect1>
+  </chapter>
+
+</part>
+
+  <chapter>
+    <title>Reference API</title>
+
+    <xi:include href="xml/abstract-predicate-transition.xml"/>
+    <xi:include href="xml/action-transition.xml"/>
+    <xi:include href="xml/array-prediction-context.xml"/>
+    <xi:include href="xml/atn.xml"/>
+    <xi:include href="xml/atn-deserialization-options.xml"/>
+    <xi:include href="xml/atn-deserializer.xml"/>
+    <xi:include href="xml/atn-simulator.xml"/>
+    <xi:include href="xml/atn-state.xml"/>
+    <xi:include href="xml/atom-transition.xml"/>
+    <xi:include href="xml/base-error-listener.xml"/>
+    <xi:include href="xml/basic-block-start-state.xml"/>
+    <xi:include href="xml/basic-state.xml"/>
+    <xi:include href="xml/bit-set.xml"/>
+    <xi:include href="xml/block-end-state.xml"/>
+    <xi:include href="xml/block-start-state.xml"/>
+    <xi:include href="xml/buffered-token-stream.xml"/>
+    <xi:include href="xml/char-stream.xml"/>
+    <xi:include href="xml/common-token.xml"/>
+    <xi:include href="xml/common-token-factory.xml"/>
+    <xi:include href="xml/common-token-stream.xml"/>
+    <xi:include href="xml/config.xml"/>
+    <xi:include href="xml/config-set.xml"/>
+    <xi:include href="xml/console-error-listener.xml"/>
+    <xi:include href="xml/decision-state.xml"/>
+    <xi:include href="xml/default-error-strategy.xml"/>
+    <xi:include href="xml/dfa.xml"/>
+    <xi:include href="xml/dfa-serializer.xml"/>
+    <xi:include href="xml/dfa-state.xml"/>
+    <xi:include href="xml/double-key-map.xml"/>
+    <xi:include href="xml/empty-prediction-context.xml"/>
+    <xi:include href="xml/epsilon-transition.xml"/>
+    <xi:include href="xml/error-listener.xml"/>
+    <xi:include href="xml/error-node.xml"/>
+    <xi:include href="xml/error-node-impl.xml"/>
+    <xi:include href="xml/error-strategy.xml"/>
+    <xi:include href="xml/file-stream.xml"/>
+    <xi:include href="xml/flexible-hash-map.xml"/>
+    <xi:include href="xml/input-stream.xml"/>
+    <xi:include href="xml/int-iset.xml"/>
+    <xi:include href="xml/int-stream.xml"/>
+    <xi:include href="xml/integer-list.xml"/>
+    <xi:include href="xml/integer-stack.xml"/>
+    <xi:include href="xml/interval.xml"/>
+    <xi:include href="xml/interval-set.xml"/>
+    <xi:include href="xml/lexer.xml"/>
+    <xi:include href="xml/lexer-action.xml"/>
+    <xi:include href="xml/lexer-action-executor.xml"/>
+    <xi:include href="xml/lexer-atn-config.xml"/>
+    <xi:include href="xml/lexer-atn-simulator.xml"/>
+    <xi:include href="xml/lexer-channel-action.xml"/>
+    <xi:include href="xml/lexer-custom-action.xml"/>
+    <xi:include href="xml/lexer-dfa-serializer.xml"/>
+    <xi:include href="xml/lexer-indexed-custom-action.xml"/>
+    <xi:include href="xml/lexer-mode-action.xml"/>
+    <xi:include href="xml/lexer-more-action.xml"/>
+    <xi:include href="xml/lexer-pop-mode-action.xml"/>
+    <xi:include href="xml/lexer-push-mode-action.xml"/>
+    <xi:include href="xml/lexer-skip-action.xml"/>
+    <xi:include href="xml/lexer-type-action.xml"/>
+    <xi:include href="xml/linked-hash-map.xml"/>
+    <xi:include href="xml/ll1-analyzer.xml"/>
+    <xi:include href="xml/loop-end-state.xml"/>
+    <xi:include href="xml/murmur-hash.xml"/>
+    <xi:include href="xml/object.xml"/>
+    <xi:include href="xml/not-set-transition.xml"/>
+    <xi:include href="xml/ordered-atn-config-set.xml"/>
+    <xi:include href="xml/parse-tree.xml"/>
+    <xi:include href="xml/parse-tree-listener.xml"/>
+    <xi:include href="xml/parse-tree-visitor.xml"/>
+    <xi:include href="xml/parse-tree-walker.xml"/>
+    <xi:include href="xml/parser.xml"/>
+    <xi:include href="xml/parser-atn-simulator.xml"/>
+    <xi:include href="xml/parser-rule-context.xml"/>
+    <xi:include href="xml/plus-block-start-state.xml"/>
+    <xi:include href="xml/plus-loopback-state.xml"/>
+    <xi:include href="xml/precedence-predicate-transition.xml"/>
+    <xi:include href="xml/predicate-transition.xml"/>
+    <xi:include href="xml/prediction-context.xml"/>
+    <xi:include href="xml/prediction-context-cache.xml"/>
+    <xi:include href="xml/proxy-error-listener.xml"/>
+    <xi:include href="xml/range-transition.xml"/>
+    <xi:include href="xml/recognizer.xml"/>
+    <xi:include href="xml/rule-context.xml"/>
+    <xi:include href="xml/rule-node.xml"/>
+    <xi:include href="xml/rule-start-state.xml"/>
+    <xi:include href="xml/rule-stop-state.xml"/>
+    <xi:include href="xml/rule-transition.xml"/>
+    <xi:include href="xml/semantic-context.xml"/>
+    <xi:include href="xml/set-transition.xml"/>
+    <xi:include href="xml/singleton-prediction-context.xml"/>
+    <xi:include href="xml/star-block-start-state.xml"/>
+    <xi:include href="xml/star-loop-entry-state.xml"/>
+    <xi:include href="xml/star-loopback-state.xml"/>
+    <xi:include href="xml/syntax-tree.xml"/>
+    <xi:include href="xml/terminal-node.xml"/>
+    <xi:include href="xml/terminal-node-impl.xml"/>
+    <xi:include href="xml/token.xml"/>
+    <xi:include href="xml/token-factory.xml"/>
+    <xi:include href="xml/token-source.xml"/>
+    <xi:include href="xml/token-stream.xml"/>
+    <xi:include href="xml/tokens-start-state.xml"/>
+    <xi:include href="xml/transition.xml"/>
+    <xi:include href="xml/tree.xml"/>
+    <xi:include href="xml/types.xml"/>
+    <xi:include href="xml/vocabulary.xml"/>
+    <xi:include href="xml/vocabulary-impl.xml"/>
+    <xi:include href="xml/wildcard-transition.xml"/>
+    <xi:include href="xml/writable-token.xml"/>
+  </chapter>
+
+
+  <chapter id="object-tree">
+    <title>Object Hierarchy</title>
+    <xi:include href="xml/tree_index.sgml"/>
+  </chapter>
+
+  <index id="api-index-full">
+    <title>API Index</title>
+    <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
+  </index>
+
+  <index id="deprecated-api-index" role="deprecated">
+    <title>Index of deprecated API</title>
+    <xi:include href="xml/api-index-deprecated.xml"><xi:fallback /></xi:include>
+  </index>
+
+  <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+
+  <para>
+    Authors and major contributors
+    <itemizedlist>
+      <listitem><para>Terence Parr, parrt@cs.usfca.edu ANTLR project lead and supreme dictator for life University of San Francisco</para></listitem>
+      <listitem><para>Sam Harwell (Tool co-author, Java and C# target)</para></listitem>
+      <listitem><para>Eric Vergnaud (Javascript, Python2, Python3 targets and significant work on C# target)</para></listitem>
+      <listitem><para>Peter Boyer (Go target)</para></listitem>
+      <listitem><para>Mike Lischke (C++ completed target)</para></listitem>
+      <listitem><para>Dan McLaughlin (C++ initial target)</para></listitem>
+      <listitem><para>David Sisson (C++ initial target and test)</para></listitem>
+      <listitem><para>Janyou (Swift target)</para></listitem>
+      <listitem><para>Ewan Mellor, Hanzhou Shi (Swift target merging)</para></listitem>
+    </itemizedlist>
+  </para>
+
+</book>

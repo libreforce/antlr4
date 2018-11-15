@@ -1,0 +1,23 @@
+digraph ATN {
+rankdir=LR;
+s148{fontsize:11, label:"148", shape:"doublecircle", fixedsize:true, width:.6};
+s496{fontsize:11,label:"496", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s497{fontsize:11,label:"497", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s498{fontsize:11,label:"498", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s147{fontsize:11,label:"147", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s491{fontsize:11,label:"491", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s492{fontsize:11,label:"492", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s493{fontsize:11,label:"&rarr;\n493+", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s494{fontsize:11,label:"&larr;\n494", shape:"circle", fixedsize:true, width:.55, peripheries:1};
+s495{fontsize:11,label:"{495+\nd=10|{<p0>|<p1>}}", shape:"record", fixedsize:false, peripheries:1};
+s147 -> s491 [fontname="Times-Italic", label="&epsilon;"];
+s491 -> s493 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'`'", arrowhead = normal];
+s493 -> s492 [fontname="Times-Italic", label="&epsilon;"];
+s492 -> s494 [fontsize=11, fontname="Courier", arrowsize=.7, label = "~'`'", arrowhead = normal];
+s494 -> s495 [fontname="Times-Italic", label="&epsilon;"];
+s495:p0 -> s493 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s495:p1 -> s496 [fontname="Times-Italic", label="&epsilon;"];
+s496 -> s497 [fontname="Times-Italic", label="&epsilon;"];
+s497 -> s498 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'`'", arrowhead = normal];
+s498 -> s148 [fontname="Times-Italic", label="&epsilon;"];
+}
